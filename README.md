@@ -12,20 +12,20 @@ We will serve a websocket server for the team server to connect to where we will
 
 ```json
 {
-    "state": string,
-    "time_remaining": number,
+    "state": "string",
+    "time_remaining": "number",
     "robots": [
         {
-            "x": number,
-            "y": number,
-            "id": UUID,
-            "angle": number
+            "x": "number",
+            "y": "number",
+            "id": "UUID",
+            "angle": "number"
         }
     ],
     "ball": [
         {
-            "x": number,
-            "y": number,
+            "x": "number",
+            "y": "number",
         }   
     ]
 }
