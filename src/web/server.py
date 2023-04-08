@@ -21,6 +21,19 @@ class Server(BaseHTTPRequestHandler):
             self.send_header('Content-type','text/html')
             self.wfile.write(open('./src/web/dashboard.html', 'r').read().encode())
             return
+        # Serving files in python webserver
+
+        if self.path.startswith("/res/") and self.path.endswith(".png"):
+            self.send_header('Content-type','image/png')
+            with open('./src/web'+self.path, 'rb') as file_handle:
+                self.wfile.write( file_handle.read())
+            return
+        if self.path.startswith("/res/") and self.path.endswith(".jpg"):
+            self.send_header('Content-type','image/jpeg')
+            with open('./src/web'+self.path, 'rb') as file_handle:
+                self.wfile.write( file_handle.read())
+            return
+        
         self.wfile.write("no".encode())
 
 def runWebserver(server_class=HTTPServer, handler_class=Server, port=8764):

@@ -7,17 +7,21 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="time"></div>
+    
     <style>
         #root{
-            width: 100vw;
-            height: calc(100vh - 100px);
+            width: calc(100vw - 40px);
+            height: calc(100vh - 100px - 40px);
             background-color: #FFF;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            
+            background-color: green;
+            background-image: url("/res/backgroundgrass.jpg");
+            background-size: 200px;
+            border: 20px solid #FFF;
+
         }
         body, html{
             padding: 0;
@@ -34,9 +38,9 @@
             justify-content: center;
         }
         .field{
-            border-color: #111;
+            border-color: #FFF;
             border-style: solid;
-            border-width: 2px;
+            border-width: 4px;
             width: calc(calc(calc(100vh - 300px)/9*16));
             height: calc(100vh - 300px);
             position: relative;
@@ -44,15 +48,15 @@
         .field::after{
             content: "";
             position: absolute;
-            background-color: #111;
+            background-color: #FFF;
             height: 100%;
-            width: 2px;
+            width: 3px;
             left: calc(50% + 1px);
         }
         #circle{
-            border-color: #111;
+            border-color: #FFF;
             border-style: solid;
-            border-width: 2px;
+            border-width: 3px;
             border-radius: 50%;
             width: var(--circleScale);
             height: var(--circleScale);
@@ -62,9 +66,9 @@
             --circleScale: calc((100vh - 300px) / 4)
         }
         .goal{
-            border-color: #111;
+            border-color: #FFF;
             border-style: solid;
-            border-width: 2px;
+            border-width: 3px;
             width: 100px;
             height: calc((100vh - 300px) / 2);
         }
@@ -84,16 +88,16 @@
             position: absolute;
         }
         .robot{
-            width: 10px;
-            height: 10px;
-            background-color: green;
+            width: 50px;
+            height: 50px;
             border-style: solid;
             border-width: 2px;
             border-radius: 50%;
             position: absolute;
-            background-image: url("res/nao.png");
+            background-image: url("/res/nao.png");
         }
     </style>
+    <div id="time"></div>
     <div id="root">
         <div class="goal goal1"></div>
         <div class="field"><div id="circle"></div></div>
