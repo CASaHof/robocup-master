@@ -1,2 +1,5 @@
 ultralytics
 yt_dlp
+websockets
+http.server
+jsonpickle
