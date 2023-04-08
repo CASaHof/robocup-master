@@ -86,6 +86,7 @@
             border-width: 2px;
             border-radius: 50%;
             position: absolute;
+            z-index: 1;
         }
         .robot{
             width: 50px;
@@ -94,7 +95,12 @@
             border-width: 2px;
             border-radius: 50%;
             position: absolute;
-            background-image: url("/res/nao.png");
+            background-image: url(/res/nao.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #fff;
+            z-index: 1;
         }
     </style>
     <div id="time"></div>
@@ -114,7 +120,10 @@
             console.log("Message is sent...");
         };
         
+        wasUpdated = false
         ws.onmessage = function (evt) { 
+            if(wasUpdated) return
+            wasUpdated = true
             var received_msg = JSON.parse(evt.data);
             if("time_remaining" in received_msg){
                 document.getElementById("time").innerHTML = new Date(received_msg.time_remaining).toLocaleTimeString()
@@ -131,10 +140,11 @@
             for(let i = 0; i < received_msg.robots.length; i++){
                 robot = document.createElement("div");
                 robot.classList.add("robot");
-                robot.style.background = received_msg.robots[i].id;
+                // robot.style.background = received_msg.robots[i].id;
                 document.getElementsByClassName("field")[0].append(robot);
                 robot.style.left = received_msg.robots[i].x*100 + "%";
                 robot.style.top = received_msg.robots[i].y*100 + "%";
+                robot.style.transform = `rotate(${received_msg.robots[i].angle}deg)`;
             }
         };
         
