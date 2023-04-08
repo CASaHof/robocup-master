@@ -8,10 +8,103 @@
 </head>
 <body>
     <div id="time"></div>
+    <style>
+        #root{
+            width: 100vw;
+            height: calc(100vh - 100px);
+            background-color: #FFF;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            
+        }
+        body, html{
+            padding: 0;
+            margin: 0;
+        }
+        #time{
+            height:100px;
+            line-height: 100px; 
+            /* REST 980 */
+            text-align: center;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        .field{
+            border-color: #111;
+            border-style: solid;
+            border-width: 2px;
+            width: calc(calc(calc(100vh - 300px)/9*16));
+            height: calc(100vh - 300px);
+            position: relative;
+        }
+        .field::after{
+            content: "";
+            position: absolute;
+            background-color: #111;
+            height: 100%;
+            width: 2px;
+            left: calc(50% + 1px);
+        }
+        #circle{
+            border-color: #111;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 50%;
+            width: var(--circleScale);
+            height: var(--circleScale);
+            position: absolute;
+            left: calc(50% - (var(--circleScale)/2)); 
+            top: calc(50% - (var(--circleScale)/2));
+            --circleScale: calc((100vh - 300px) / 4)
+        }
+        .goal{
+            border-color: #111;
+            border-style: solid;
+            border-width: 2px;
+            width: 100px;
+            height: calc((100vh - 300px) / 2);
+        }
+        .goal1{
+            border-right: none;
+        }
+        .goal2{
+            border-left: none;
+        }
+        .ball{
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .robot{
+            width: 10px;
+            height: 10px;
+            background-color: green;
+            border-style: solid;
+            border-width: 2px;
+            border-radius: 50%;
+            position: absolute;
+            background-image: url("res/nao.png");
+        }
+    </style>
+    <div id="root">
+        <div class="goal goal1"></div>
+        <div class="field"><div id="circle"></div></div>
+        <div class="goal goal2"></div>
+
+    </div>
     <script>
         // Let us open a web socket
         var ws = new WebSocket("ws://localhost:8765");
         
+
         ws.onopen = function() {
             ws.send("welcome");
             console.log("Message is sent...");
@@ -19,15 +112,42 @@
         
         ws.onmessage = function (evt) { 
             var received_msg = JSON.parse(evt.data);
-            if("time" in received_msg){
-                document.getElementById("time").innerHTML = new Date(received_msg.time).toLocaleTimeString()
+            if("time_remaining" in received_msg){
+                document.getElementById("time").innerHTML = new Date(received_msg.time_remaining).toLocaleTimeString()
             }
+            removeDynObjects();
+            var ball = document.createElement("div");
+            ball.classList.add("ball");
+            document.getElementsByClassName("field")[0].append(ball);
+            ball.style.left = received_msg.balls[0].x*100 + "%";
+            ball.style.top = received_msg.balls[0].y*100 + "%";
             console.log("Message is received...",received_msg);
+
+
+            for(let i = 0; i < received_msg.robots.length; i++){
+                robot = document.createElement("div");
+                robot.classList.add("robot");
+                robot.style.background = received_msg.robots[i].id;
+                document.getElementsByClassName("field")[0].append(robot);
+                robot.style.left = received_msg.robots[i].x*100 + "%";
+                robot.style.top = received_msg.robots[i].y*100 + "%";
+            }
         };
         
         ws.onclose = function() { 
             console.log("Connection is closed..."); 
         };
+
+        function removeDynObjects(){
+            var oldball = document.getElementsByClassName("ball");
+            for(let i = 0; i < oldball.length; i++){
+                oldball[i].remove();
+            }
+            var oldRobots = document.getElementsByClassName("robot");
+            for(let i = 0; i < oldRobots.length; i++){
+                oldRobots[i].remove();
+            }
+        }
     </script>
 </body>
 </html>

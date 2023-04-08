@@ -21,7 +21,7 @@ We will serve a websocket server for the team server to connect to where we will
             "angle": "number"
         }
     ],
-    "ball": [
+    "balls": [
         {
             "x": "number",
             "y": "number",
