@@ -1,44 +1,68 @@
 from http.server import BaseHTTPRequestHandler,HTTPServer
+import re
 
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 
 class Server(BaseHTTPRequestHandler):
-    def do_OPTIONS(self):
-        self.send_response(200, "ok")
-        self.send_header('Access-Control-Allow-Credentials', 'true')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET')
-        self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
-
-    # GET sends back a Hello world message
     def do_GET(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Credentials', 'true')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET')
         self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
-        #self.send_header('Content-type','text/html')
+        path = self.path
+        if path == "/":
+            path = "/dashboard.html"
+        self.send_header('Content-type',getMime(path))
         self.end_headers()
-        if self.path.endswith("/"):
-            self.send_header('Content-type','text/html')
-            self.wfile.write(open('./src/web/dashboard.html', 'r').read().encode())
-            return
-        # Serving files in python webserver
 
-        if self.path.startswith("/res/") and self.path.endswith(".png"):
-            self.send_header('Content-type','image/png')
-            with open('./src/web'+self.path, 'rb') as file_handle:
-                self.wfile.write( file_handle.read())
-            return
-        
-        if self.path.startswith("/res/") and self.path.endswith(".jpg"):
-            self.send_header('Content-type','image/jpeg')
-            with open('./src/web'+self.path, 'rb') as file_handle:
-                self.wfile.write( file_handle.read())
-            return
-        
+        if bool(re.compile("dashboard.html").search(path)):
+            return self.wfile.write(serveFile('./src/web'+path))
+
+        """
+        Note: ([a-zA-Z0-9]*) matches all single word strings.
+        no extra characters besides the following are allowed:
+            - uppercase letters
+            - lowercase letters
+            - numbers
+
+        To Extend stuff here you need to enter the required file here.
+        You also might have to extend the getMime function down below!
+        """
+
+        if bool(re.compile("/res/([a-zA-Z0-9]*).png").search(path)):
+            return self.wfile.write(serveFile("./src/web"+path))
+
+        if bool(re.compile("/res/([a-zA-Z0-9]*).jpg").search(path)):
+            return self.wfile.write(serveFile("./src/web"+path))
+
+        if bool(re.compile("/res/([a-zA-Z0-9]*).css").search(path)):
+            return self.wfile.write(serveFile("./src/static"+path))
+
+        if bool(re.compile("/res/([a-zA-Z0-9]*).js").search(path)):
+            return self.wfile.write(serveFile("./src/static"+path))
+
         self.wfile.write("no".encode())
+
+def serveFile(path):
+    # print(f"[WEB] Serving {path}") # For debug
+    with open(path, 'rb') as file_handle:
+        ret = file_handle.read()
+        return ret
+
+def getMime(file):
+    if file.endswith('.js'):
+        return 'application/javascript'
+    if file.endswith('.css'):
+        return 'text/css'
+    if file.endswith('.jpg'):
+        return 'image/jpeg'
+    if file.endswith('.png'):
+        return 'image/png'
+    if file.endswith('.html'):
+        return 'text/html'
+    return 'text/plain'
 
 def runWebserver(server_class=HTTPServer, handler_class=Server):
     port = int(config.get("WEB_PORT"))
