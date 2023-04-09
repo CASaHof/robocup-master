@@ -26,6 +26,17 @@ pip install -r requirements.txt
 python server.py
 ```
 
+# Web Server
+
+[GET] / \
+_Shows the live dashboard._
+
+[GET] /res/*.png
+_Loads a .png inside the [Ressources](src/web/res) Folder._
+
+[GET] /res/*.jpg
+_Loads a .jpg inside the [Ressources](src/web/res) Folder._
+
 # Example Message
 
 We will serve a websocket server for the team server to connect to where we will publish the following object:
