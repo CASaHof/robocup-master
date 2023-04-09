@@ -14,6 +14,7 @@ class Server(BaseHTTPRequestHandler):
         path = self.path
         if path == "/":
             path = "/dashboard.html"
+        file = path.split("/")[len(path.split("/"))-1]
         self.send_header('Content-type',getMime(path))
         self.end_headers()
 
@@ -32,16 +33,16 @@ class Server(BaseHTTPRequestHandler):
         """
 
         if bool(re.compile("/res/([a-zA-Z0-9]*).png").search(path)):
-            return self.wfile.write(serveFile("./src/web"+path))
+            return self.wfile.write(serveFile(f"./src/web/res/{file}"))
 
         if bool(re.compile("/res/([a-zA-Z0-9]*).jpg").search(path)):
-            return self.wfile.write(serveFile("./src/web"+path))
+            return self.wfile.write(serveFile(f"./src/web/res/{file}"))
 
-        if bool(re.compile("/res/([a-zA-Z0-9]*).css").search(path)):
-            return self.wfile.write(serveFile("./src/static"+path))
+        if bool(re.compile("/static/([a-zA-Z0-9]*).css").search(path)):
+            return self.wfile.write(serveFile(f"./src/web/static/{file}"))
 
-        if bool(re.compile("/res/([a-zA-Z0-9]*).js").search(path)):
-            return self.wfile.write(serveFile("./src/static"+path))
+        if bool(re.compile("/static/([a-zA-Z0-9]*).js").search(path)):
+            return self.wfile.write(serveFile(f"./src/web/static/{file}"))
 
         self.wfile.write("no".encode())
 
