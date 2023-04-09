@@ -5,6 +5,9 @@ import jsonpickle
 import threading
 import datetime
 
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+
 from src.web.server import runWebserver
 
 async def show_time(websocket):
@@ -49,8 +52,9 @@ async def show_time(websocket):
         await asyncio.sleep(1)
 
 async def do_start_websocket():
-    async with websockets.serve(show_time, "localhost", 8765):
-        print("Websocket listening on ws://localhost:8765")
+    WS_PORT = int(config.get("WS_PORT"))
+    async with websockets.serve(show_time, "localhost", WS_PORT):
+        print(f"Websocket listening on ws://localhost:{WS_PORT}")
         await asyncio.Future()  # run forever
 
 def start_websocket():

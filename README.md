@@ -7,6 +7,27 @@ For that we use [YOLOv8](https://github.com/ultralytics/ultralytics) to detect t
 
 We use one cameras on each side so calculate the positions for that.
 
+# Installation
+
+## Windows
+```bash
+copy .env.example .env
+pip install -r requirements.txt
+```
+
+## Unix
+```bash
+cp .env.example .env
+pip install -r requirements.txt
+```
+
+# Usage
+```bash
+python server.py
+```
+
+# Example Message
+
 We will serve a websocket server for the team server to connect to where we will publish the following object:
 
 ```json

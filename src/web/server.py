@@ -1,5 +1,8 @@
 from http.server import BaseHTTPRequestHandler,HTTPServer
 
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+
 class Server(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200, "ok")
@@ -28,6 +31,7 @@ class Server(BaseHTTPRequestHandler):
             with open('./src/web'+self.path, 'rb') as file_handle:
                 self.wfile.write( file_handle.read())
             return
+        
         if self.path.startswith("/res/") and self.path.endswith(".jpg"):
             self.send_header('Content-type','image/jpeg')
             with open('./src/web'+self.path, 'rb') as file_handle:
@@ -36,8 +40,9 @@ class Server(BaseHTTPRequestHandler):
         
         self.wfile.write("no".encode())
 
-def runWebserver(server_class=HTTPServer, handler_class=Server, port=8764):
-    print("Webserver listening on http://localhost:8765")
+def runWebserver(server_class=HTTPServer, handler_class=Server):
+    port = int(config.get("WEB_PORT"))
+    print(f"Webserver listening on http://localhost:{port}")
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
 
