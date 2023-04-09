@@ -37,6 +37,7 @@ class Server(BaseHTTPRequestHandler):
         self.wfile.write("no".encode())
 
 def runWebserver(server_class=HTTPServer, handler_class=Server, port=8764):
+    print("Webserver listening on http://localhost:8765")
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
 

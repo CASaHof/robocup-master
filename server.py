@@ -50,6 +50,7 @@ async def show_time(websocket):
 
 async def do_start_websocket():
     async with websockets.serve(show_time, "localhost", 8765):
+        print("Websocket listening on ws://localhost:8765")
         await asyncio.Future()  # run forever
 
 def start_websocket():
