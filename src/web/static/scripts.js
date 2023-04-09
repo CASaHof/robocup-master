@@ -1,4 +1,7 @@
-// Let us open a web socket
+// TODO: Implement multiple balls.
+// TODO: Implement current state (running, paused, etc.) - maybe some overlays?
+// TODO: Implement goals?
+
 var ws = new WebSocket("ws://localhost:8765");
 var local_robots = []
 
@@ -9,8 +12,8 @@ ws.onopen = function() {
 
 wasUpdated = false
 ws.onmessage = function (evt) { 
-    //if(wasUpdated) return
-    //wasUpdated = true
+    // if(wasUpdated) return
+    wasUpdated = true
     var received_msg = JSON.parse(evt.data);
     if("time_remaining" in received_msg){
         document.getElementById("time").innerHTML = new Date(received_msg.time_remaining).toLocaleTimeString()
