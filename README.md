@@ -27,13 +27,13 @@ python server.py
 
 # Web Server
 
-[GET] / \
+[GET] `/` \
 _Shows the live dashboard._
 
-[GET] /res/*.png
+[GET] `/res/*.png` \
 _Loads a .png inside the [Ressources](src/web/res) Folder._
 
-[GET] /res/*.jpg
+[GET] `/res/*.jpg` \
 _Loads a .jpg inside the [Ressources](src/web/res) Folder._
 
 # Example Message
