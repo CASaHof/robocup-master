@@ -1,3 +1,11 @@
+from os.path import exists
+import sys
+
+if not exists("./.env"):
+    print("[ERROR] .env not found. Did you install?")
+    print("https://github.com/redigermany/cas-robocup-master/#install")
+    sys.exit()
+
 import asyncio
 import random
 import websockets
