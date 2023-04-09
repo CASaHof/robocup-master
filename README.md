@@ -1,4 +1,3 @@
-"# cas-robocup-master" 
 # Cooperative Autonomous Driving - Robocup Master
 
 The goal is to detect [NAO6](https://www.aldebaran.com/en/support/nao-6) robots inside a soccer field.
