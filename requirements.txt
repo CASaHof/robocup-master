@@ -1,4 +1,5 @@
+ultralytics
+yt_dlp
 websockets
 http.server
-json
 jsonpickle

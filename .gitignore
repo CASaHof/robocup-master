@@ -2,3 +2,7 @@
 *.pt
 *.mp4
 *__pycache__*
+.env
+*.zip
+test.
+field
