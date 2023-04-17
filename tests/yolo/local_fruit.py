@@ -6,40 +6,6 @@ from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 
-model = YOLO('./best.pt')  # load an official detection model
-model = YOLO('./yolov8x.pt')  # load an official detection model
-# Create a numpy array to store the selected points
-points = np.zeros((0, 2))
-
-def drawGameArea():
-    # Open the image
-    img = Image.open('image.jpg')
-    width, height = img.size
-
-    # Create a numpy array to store the selected points
-
-    # Define the event handler for mouse clicks
-    def onclick(event):
-        global points
-        # Ignore clicks outside of the image
-        if event.xdata is None or event.ydata is None:
-            return
-        # Append the selected point to the array
-        points = np.vstack((points, [event.xdata, event.ydata]))
-        # Update the plot with the selected point
-        plt.scatter(event.xdata, event.ydata, c='r')
-        plt.draw()
-
-    # Display the image and wait for the user to select points
-    fig, ax = plt.subplots()
-    ax.imshow(img)
-    ax.set_xlim([0, width])
-    ax.set_ylim([height, 0])
-    cid = fig.canvas.mpl_connect('button_press_event', onclick)
-    plt.show()
-
-    # Print the selected points
-    print(points)
 
 
 
@@ -70,10 +36,24 @@ top_right = (width-140,175)
 bottom_left = (-30,height-120)
 bottom_right = (width+5,height-120)
 
+def loadData():
+    global top_left
+    global top_right
+    global bottom_right
+    global bottom_left
+    f = open("field", "r")
+    data = f.read().splitlines()
+    top_left = (int(data[0].split("x")[0].split(".")[0]),int(data[0].split("x")[1].split('.')[0]))
+    top_right = (int(data[1].split("x")[0].split(".")[0]),int(data[1].split("x")[1].split('.')[0]))
+    bottom_right = (int(data[2].split("x")[0].split(".")[0]),int(data[2].split("x")[1].split('.')[0]))
+    bottom_left = (int(data[3].split("x")[0].split(".")[0]),int(data[3].split("x")[1].split('.')[0]))
+    # print(data)
+
+loadData()
+
+model = YOLO('./best.pt')  # load an official detection model
 results = model(source=2, stream=True,verbose=False) 
 for result in results:
-    if(not points.any()):
-        drawGameArea(result.orig_img)
     # print(result.orig_img)
     boxes = result.boxes  # Boxes object for bbox outputs
     im = Image.fromarray(result.orig_img[...,::-1].copy())
