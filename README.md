@@ -44,6 +44,16 @@ We will serve a websocket server for the team server to connect to where we will
 {
     "state": "string",
     "time_remaining": "number",
+    "teams": [
+        {
+            "name": "string",
+            "score": "number"
+        },
+        {
+            "name": "string",
+            "score": "number"
+        }
+    ],
     "robots": [
         {
             "x": "number",
@@ -61,3 +71,14 @@ We will serve a websocket server for the team server to connect to where we will
 }
 ```
 
+The `state` can be one of the following: `playing`, `paused`, `foul`, `ended`, `goal`.
+
+The `time_remaining` is an integer of the remaining seconds to play.
+
+## Übersicht Spielfeld
+![Alt text](images/top%20down.png)
+
+## Exemplarische Ansicht der Kamera
+![Alt text](images/empty%20field.png)
+
+![Alt text](images/field.png)
