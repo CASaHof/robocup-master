@@ -1,6 +1,9 @@
 // TODO: Implement multiple balls.
 // TODO: Implement current state (running, paused, etc.) - maybe some overlays?
-// TODO: Implement goals?
+// TODO: Implement goals? Display score / Display GOAL EFFECT WITH NUCLEAR BOMB EXPLOSION
+// TBC: GOAL DETECTION MANUALLY?AUTOMATICALLY?
+
+
 
 var ws = new WebSocket("ws://localhost:8765");
 var local_robots = []
@@ -36,6 +39,12 @@ ws.onmessage = function (evt) {
         local_robots[i].style.top = received_msg.robots[i].y*100 + "%";
         local_robots[i].style.transform = `rotate(${received_msg.robots[i].angle}deg)`;
     }
+
+    document.getElementsByClassName
+    if(Math.random() < 0.9){
+        document.getElementById("message").style.display = "unset"
+    }
+
 };
 
 ws.onclose = function() { 
@@ -50,4 +59,7 @@ function removeDynObjects(){
     for(let i = 0; i < local_robots.length; i++){
         local_robots[i].remove();
     }
+
+    document.getElementById("message").style.display = "none"
+
 }
