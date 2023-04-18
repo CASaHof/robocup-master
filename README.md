@@ -6,7 +6,37 @@ For that we use [YOLOv8](https://github.com/ultralytics/ultralytics) to detect t
 
 We use one cameras on each side so calculate the positions for that.
 
-Right now we use [robocup spl Computer Vision Project](https://universe.roboflow.com/bad-trip-cz9ej/robocup-spl) by `Bad Trip` as a starting point for robot regocnition which works pretty well.
+# Installation
+
+## Windows
+```bash
+copy .env.example .env
+pip install -r requirements.txt
+```
+
+## Unix
+```bash
+cp .env.example .env
+pip install -r requirements.txt
+```
+
+# Usage
+```bash
+python server.py
+```
+
+# Web Server
+
+[GET] `/` \
+_Shows the live dashboard._
+
+[GET] `/res/*.png` \
+_Loads a .png inside the [Ressources](src/web/res) Folder._
+
+[GET] `/res/*.jpg` \
+_Loads a .jpg inside the [Ressources](src/web/res) Folder._
+
+# Example Message
 
 We will serve a websocket server for the team server to connect to where we will publish the following object:
 
@@ -32,7 +62,7 @@ We will serve a websocket server for the team server to connect to where we will
             "angle": "number"
         }
     ],
-    "ball": [
+    "balls": [
         {
             "x": "number",
             "y": "number",

@@ -4,30 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cooperative Autonomous Systems</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div id="time"></div>
-    <script>
-        // Let us open a web socket
-        var ws = new WebSocket("ws://localhost:8765");
-        
-        ws.onopen = function() {
-            ws.send("welcome");
-            console.log("Message is sent...");
-        };
-        
-        ws.onmessage = function (evt) { 
-            var received_msg = JSON.parse(evt.data);
-            if("time" in received_msg){
-                document.getElementById("time").innerHTML = new Date(received_msg.time).toLocaleTimeString()
-            }
-            console.log("Message is received...",received_msg);
-        };
-        
-        ws.onclose = function() { 
-            console.log("Connection is closed..."); 
-        };
-    </script>
+    <div id="root">
+        <div class="goal goal1"></div>
+        <div class="field">
+            <div id="circle"></div>
+        </div>
+        <div class="goal goal2"></div>
+    </div>
+    <script src="static/scripts.js" defer></script>
 </body>
 </html>
