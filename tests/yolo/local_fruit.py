@@ -6,10 +6,7 @@ from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-
-
+print("Welcome")
 
 # https://im-coder.com/wie-berechne-ich-den-schnittpunkt-zweier-linien-in-python.html
 def line_intersection(line1, line2):
@@ -49,11 +46,17 @@ def loadData():
     bottom_left = (int(data[3].split("x")[0].split(".")[0]),int(data[3].split("x")[1].split('.')[0]))
     # print(data)
 
+print("Loading Config")
 loadData()
+print("Config Loaded")
 
+print("Loading model")
 model = YOLO('./best.pt')  # load an official detection model
+print("Model loaded")
+
 results = model(source=2, stream=True,verbose=False) 
 for result in results:
+    print("Image")
     # print(result.orig_img)
     boxes = result.boxes  # Boxes object for bbox outputs
     im = Image.fromarray(result.orig_img[...,::-1].copy())
