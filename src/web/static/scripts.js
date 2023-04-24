@@ -47,6 +47,8 @@ ws.onmessage = function (evt) {
 
 };
 
+//TODO
+
 ws.onclose = function() { 
     console.log("Connection is closed..."); 
 };
