@@ -13,10 +13,69 @@ import jsonpickle
 import threading
 import datetime
 
+from enum import Enum
+
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 
 from src.web.server import runWebserver
+
+class EGameState(Enum):
+    PLAYING = 1
+    PAUSED = 2
+    FOUL = 3
+    ENDED = 4
+    GOAL = 5
+
+class GameState:
+    state:EGameState = EGameState.PAUSED
+
+class Singleton(object):
+    _instance = None
+
+    data = {
+        "state": "debug",
+        "time_remaining": "time_remaining",
+        "robots": [
+            {
+                "x": random.random(),
+                "y": random.random(),
+                "id": "blue",
+                "angle": random.random()*360,
+            },
+            {
+                "x": random.random(),
+                "y": random.random(),
+                "id": "green",
+                "angle": random.random()*360,
+            },
+            {
+                "x": random.random(),
+                "y": random.random(),
+                "id": "yellow",
+                "angle": random.random()*360,
+            },
+            {
+                "x": random.random(),
+                "y": random.random(),
+                "id": "pink",
+                "angle": random.random()*360,
+            }
+        ],
+        "balls": [
+            {
+                "x": random.random(),
+                "y": random.random(),
+            }   
+        ]
+    }
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+
+s1 = Singleton()
 
 async def show_time(websocket):
     while True:
