@@ -36,38 +36,8 @@ class Singleton(object):
     data = {
         "state": "debug",
         "time_remaining": "time_remaining",
-        "robots": [
-            {
-                "x": random.random(),
-                "y": random.random(),
-                "id": "blue",
-                "angle": random.random()*360,
-            },
-            {
-                "x": random.random(),
-                "y": random.random(),
-                "id": "green",
-                "angle": random.random()*360,
-            },
-            {
-                "x": random.random(),
-                "y": random.random(),
-                "id": "yellow",
-                "angle": random.random()*360,
-            },
-            {
-                "x": random.random(),
-                "y": random.random(),
-                "id": "pink",
-                "angle": random.random()*360,
-            }
-        ],
-        "balls": [
-            {
-                "x": random.random(),
-                "y": random.random(),
-            }   
-        ]
+        "robots": [],
+        "balls": []
     }
 
     def __new__(cls, *args, **kwargs):
