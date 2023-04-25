@@ -44,49 +44,55 @@ class Singleton(object):
         if not cls._instance:
             cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
         return cls._instance
+    
+    def setBalls(self,balls):
+        self.data["balls"] = balls
+
+    def setRobots(self,robots):
+        self.data["robots"] = robots
 
 s1 = Singleton()
-
+# {
+#     "state": "debug",
+#     "time_remaining": message,
+#     "robots": [
+#         {
+#             "x": random.random(),
+#             "y": random.random(),
+#             "id": "blue",
+#             "angle": random.random()*360,
+#         },
+#         {
+#             "x": random.random(),
+#             "y": random.random(),
+#             "id": "green",
+#             "angle": random.random()*360,
+#         },
+#         {
+#             "x": random.random(),
+#             "y": random.random(),
+#             "id": "yellow",
+#             "angle": random.random()*360,
+#         },
+#         {
+#             "x": random.random(),
+#             "y": random.random(),
+#             "id": "pink",
+#             "angle": random.random()*360,
+#         }
+#     ],
+#     "balls": [
+#         {
+#             "x": random.random(),
+#             "y": random.random(),
+#         }   
+#     ]
+# }
 async def show_time(websocket):
     while True:
         message = datetime.datetime.utcnow().isoformat() + "Z"
-        await websocket.send(jsonpickle.encode({
-            "state": "debug",
-            "time_remaining": message,
-            "robots": [
-                {
-                    "x": random.random(),
-                    "y": random.random(),
-                    "id": "blue",
-                    "angle": random.random()*360,
-                },
-                {
-                    "x": random.random(),
-                    "y": random.random(),
-                    "id": "green",
-                    "angle": random.random()*360,
-                },
-                {
-                    "x": random.random(),
-                    "y": random.random(),
-                    "id": "yellow",
-                    "angle": random.random()*360,
-                },
-                {
-                    "x": random.random(),
-                    "y": random.random(),
-                    "id": "pink",
-                    "angle": random.random()*360,
-                }
-            ],
-            "balls": [
-                {
-                    "x": random.random(),
-                    "y": random.random(),
-                }   
-            ]
-        }))
-        await asyncio.sleep(1)
+        await websocket.send(jsonpickle.encode(s1.data))
+        await asyncio.sleep(1/10)
 
 async def do_start_websocket():
     WS_PORT = int(config.get("WS_PORT"))
@@ -98,10 +104,10 @@ def start_websocket():
     asyncio.run(do_start_websocket())
     
 # Start Server
-def main():
+def startServer():
     http = threading.Thread(target=runWebserver, daemon=True)
     http.start()
     start_websocket()
 
 if __name__ == "__main__":
-    main()
+    startServer()
