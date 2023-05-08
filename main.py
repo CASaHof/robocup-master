@@ -1,4 +1,6 @@
 from datetime import datetime
+import random
+import threading
 from ultralytics import YOLO
 from yt_dlp import YoutubeDL
 from os.path import exists
@@ -7,6 +9,11 @@ from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
+
+from server import startServer, s1
+
+x = threading.Thread(target=startServer)
+x.start()
 
 print("Welcome")
 
@@ -81,7 +88,12 @@ for result in results:
     img1.line([top_right,bottom_right], width=5, fill="#ffffff")
     img1.line([bottom_left,bottom_right], width=5, fill="#ffffff")
 
-    for idx,c in enumerate(result.boxes.cls):#
+    # s1.resetBalls()
+    balls = []
+    robots = []
+
+    for idx,c in enumerate(result.boxes.cls):
+        if result.names[int(c)] == "robot" or result.names[int(c)]=="ball":
             w, h = 220, 190
             shape = [(boxes.xyxy[idx][0], boxes.xyxy[idx][1]), (boxes.xyxy[idx][2],boxes.xyxy[idx][3])]
             position_x = boxes.xyxy[idx][0] + ((boxes.xyxy[idx][2] - boxes.xyxy[idx][0]) / 2)
@@ -116,18 +128,35 @@ for result in results:
             if left_intersection and bottom_intersection and right_intersection and top_intersection:
                 x_percent = int(((position_x - left_intersection[0]) / (right_intersection[0] - left_intersection[0])) * 100)/100
                 y_percent = int(((position_y - bottom_intersection[1]) / (top_intersection[1] - bottom_intersection[1])) * 100)/100
+
+                if result.names[int(c)]=="ball":
+                    balls.append({"x":x_percent,"y":y_percent})
+
+                if result.names[int(c)]=="robot":
+                    robots.append({
+                        "x": x_percent,
+                        "y": y_percent,
+                        "id": "blue",
+                        "team": "blue",
+                        "angle": 0,
+                    })
+
                 outline = "red"
                 inArea = x_percent>0 and x_percent<1 and y_percent>0 and y_percent<1
                 if inArea:
                     outline = "#4ae53a"
 
-                img1.rectangle(shape, outline = outline, width=2)
+                # img1.rectangle(shape, outline = outline, width=2)
                 if inArea:
                     img1.text((position_x-1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                     img1.text((position_x-1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                     img1.text((position_x+1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                     img1.text((position_x+1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                     img1.text((position_x,boxes.xyxy[idx][1]-20), fill ="#ffffff", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
+        # else:
+            # print(result.names[int(c)])
+    s1.setBalls(balls)
+    s1.setRobots(robots)
 
     
     open_cv_image = np.array(im.convert("RGB")) 

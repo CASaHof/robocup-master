@@ -19,124 +19,122 @@ body, html {
     background-size: 200px;
 }
 
-#header{
-    height:80px;
-    line-height: 80px; 
-    /* REST 980 */
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding-top: 20px;
-    
+#header {
+  height: 80px;
+  line-height: 80px;
+  /* REST 980 */
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
 }
-.headerItem{
-    font-size: 50px;
-    border-style: solid;
-    border-color: #111;
-    padding-right: 20px;
-    padding-left: 20px;
-    margin: 20px;
-    border-radius: 10px;
-    box-shadow: 2px 5px;
-
+.headerItem {
+  font-size: 50px;
+  border-style: solid;
+  border-color: #111;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 5px;
 }
 
 #time {
-    
 }
 
 .field {
-    border-color: #FFF;
-    border-style: solid;
-    border-width: 4px;
-    width: calc(calc(calc(100vh - 320px)/9*16));
-    height: calc(100vh - 300px);
-    position: relative;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 4px;
+  width: calc(calc(calc(100vh - 320px) / 9 * 16));
+  height: calc(100vh - 300px);
+  position: relative;
 }
 
 .field::after {
-    content: "";
-    position: absolute;
-    background-color: #FFF;
-    height: 100%;
-    width: 3px;
-    left: calc(50% + 1px);
+  content: "";
+  position: absolute;
+  background-color: #fff;
+  height: 100%;
+  width: 3px;
+  left: calc(50% + 1px);
 }
-#message{
-    border-color: #FFF;
-    border-style: solid;
-    border-width: 3px;
-    border-radius: 10px;
-    width: 500px;
-    height: 200px;
-    position: absolute;
-    left: calc(50% - 250px);
-    top: calc(50% - 100px);
-    background-image: url("/res/torMessageBackground.jpg");
-    background-size: 100%;
-    background-position: center;
-    text-align: center;
-    font-size: 100px;
-    color: #FFF;
-    text-shadow: 0px 0px 3px rgba(0,0,0,1);
-    line-height: 200px;
-    z-index: 999;
+#message {
+  border-color: #fff;
+  border-style: solid;
+  border-width: 3px;
+  border-radius: 10px;
+  width: 500px;
+  height: 200px;
+  position: absolute;
+  left: calc(50% - 250px);
+  top: calc(50% - 100px);
+  background-image: url("/res/torMessageBackground.jpg");
+  background-size: 100%;
+  background-position: center;
+  text-align: center;
+  font-size: 100px;
+  color: #fff;
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 1);
+  line-height: 200px;
+  z-index: 999;
 }
 
 #circle {
-    border-color: #FFF;
-    border-style: solid;
-    border-width: 3px;
-    border-radius: 50%;
-    width: var(--circleScale);
-    height: var(--circleScale);
-    position: absolute;
-    left: calc(50% - (var(--circleScale)/2)); 
-    top: calc(50% - (var(--circleScale)/2));
-    --circleScale: calc((100vh - 300px) / 4)
+  border-color: #fff;
+  border-style: solid;
+  border-width: 3px;
+  border-radius: 50%;
+  width: var(--circleScale);
+  height: var(--circleScale);
+  position: absolute;
+  left: calc(50% - (var(--circleScale) / 2));
+  top: calc(50% - (var(--circleScale) / 2));
+  --circleScale: calc((100vh - 300px) / 4);
 }
 
 .goal {
-    border-color: #FFF;
-    border-style: solid;
-    border-width: 3px;
-    width: 100px;
-    height: calc((100vh - 300px) / 2);
+  display: none;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 3px;
+  width: 100px;
+  height: calc((100vh - 300px) / 2);
 }
 
 .goal1 {
-    border-right: none;
+  border-right: none;
 }
 
 .goal2 {
-    border-left: none;
+  border-left: none;
 }
 
 .ball {
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 50%;
-    position: absolute;
-    z-index: 1;
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 1;
 }
 
 .robot {
-    width: 50px;
-    height: 50px;
-    margin: -25px;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 50%;
-    position: absolute;
-    background-image: url(/res/nao.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: #fff;
-    z-index: 1;
+  width: 50px;
+  height: 50px;
+  margin: -25px;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 50%;
+  position: absolute;
+  background-image: url(/res/nao.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #fff;
+  z-index: 1;
 }
