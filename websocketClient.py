@@ -12,8 +12,11 @@ import websockets
 import jsonpickle
 import threading
 import datetime
+import signal
 
 from enum import Enum
+
+import asyncio
 
 from dotenv import dotenv_values
 config = dotenv_values(".env")
@@ -85,29 +88,24 @@ s1 = Singleton()
 #         {
 #             "x": random.random(),
 #             "y": random.random(),
-#         }   
+#         }     
 #     ]
 # }
-async def show_time(websocket):
-    while True:
-        message = datetime.datetime.utcnow().isoformat() + "Z"
-        await websocket.send(jsonpickle.encode(s1.data))
-        await asyncio.sleep(1/10)
 
-async def do_start_websocket():
-    WS_PORT = int(config.get("WS_PORT"))
-    async with websockets.serve(show_time, "localhost", WS_PORT):
-        print(f"Websocket listening on ws://localhost:{WS_PORT}")
-        await asyncio.Future()  # run forever
-
-def start_websocket():
-    asyncio.run(do_start_websocket())
+async def establishConnection():
+    WS_PORT = config.get("WS_PORT")
+    WS_HOST = "localhost"
+    if(len(sys.argv)>1):
+        print(sys.argv)
+        WS_HOST = sys.argv[1]
+    async with websockets.connect(f"ws://{WS_HOST}:{WS_PORT}") as websocket:
+        print(f"Connected to {WS_HOST}:{WS_PORT}")
+        message = websocket.recv()
     
-# Start Server
-def startServer():
-    http = threading.Thread(target=runWebserver, daemon=True)
-    http.start()
-    start_websocket()
+
+        async for message in websocket:
+            print(f"Received: {message}")
+
 
 if __name__ == "__main__":
-    startServer()
+   asyncio.run(establishConnection())
