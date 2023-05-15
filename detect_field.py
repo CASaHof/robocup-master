@@ -9,15 +9,42 @@ import matplotlib
 import tkinter
 import sys
 
+
 model = YOLO('./yolov8x.pt')  # load an official detection model
 # Create a numpy array to store the selected points
 points = np.zeros((0, 2))
 
 matplotlib.use('TkAgg')
 
+# https://stackoverflow.com/a/67686428
+def order_points(points):
+    pts = np.array(points)
+    # initialzie a list of coordinates that will be ordered
+    # such that the first entry in the list is the top-left,
+    # the second entry is the top-right, the third is the
+    # bottom-right, and the fourth is the bottom-left
+    rect = np.zeros((4, 2), dtype = "float32")
+
+    # the top-left point will have the smallest sum, whereas
+    # the bottom-right point will have the largest sum
+    s = pts.sum(axis = 1)
+    rect[0] = pts[np.argmin(s)]
+    rect[2] = pts[np.argmax(s)]
+
+    # now, compute the difference between the points, the
+    # top-right point will have the smallest difference,
+    # whereas the bottom-left will have the largest difference
+    diff = np.diff(pts, axis = 1)
+    rect[1] = pts[np.argmin(diff)]
+    rect[3] = pts[np.argmax(diff)]
+
+    # return the ordered coordinates
+    return rect
+
 def parseData(data):
     print(data)
     f = open("field", "w")
+    data = order_points(data)
     f.write(f"{data[0][0]}x{data[0][1]}\n")
     f.write(f"{data[1][0]}x{data[1][1]}\n")
     f.write(f"{data[2][0]}x{data[2][1]}\n")
