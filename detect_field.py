@@ -1,5 +1,4 @@
 from ultralytics import YOLO#
-
 from yt_dlp import YoutubeDL
 from os.path import exists
 import time
@@ -82,7 +81,7 @@ def drawGameArea(img):
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
     plt.show()
 
-results = model(source=2, stream=True,verbose=False) 
+results = model(source=0, stream=True,verbose=False) 
 t = True
 for result in results:
     # if(not points.any()):

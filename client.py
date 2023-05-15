@@ -1,7 +1,11 @@
+import asyncio
 from datetime import datetime
+from enum import Enum
 import random
+import sys
 import threading
 from ultralytics import YOLO
+import websockets
 from yt_dlp import YoutubeDL
 from os.path import exists
 import time
@@ -10,12 +14,65 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 
-from server import startServer, s1
 
-x = threading.Thread(target=startServer)
-x.start()
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+
 
 print("Welcome")
+
+    
+async def establishConnection():
+    WS_PORT = config.get("WS_PORT")
+    WS_HOST = "localhost"
+    if(len(sys.argv)>1):
+        print(sys.argv)
+        WS_HOST = sys.argv[1]
+    async with websockets.connect(f"ws://{WS_HOST}:{WS_PORT}") as websocket:
+        print(f"Connected to {WS_HOST}:{WS_PORT}")
+        message = await websocket.recv()
+    
+
+        async for message in websocket:
+            print(f"Received: {message}")
+
+
+if __name__ == "__main__":
+   
+   asyncio.run(establishConnection())
+
+class EGameState(Enum):
+    PLAYING = 1
+    PAUSED = 2
+    FOUL = 3
+    ENDED = 4
+    GOAL = 5
+
+class GameState:
+    state:EGameState = EGameState.PAUSED
+
+class Singleton(object):
+    _instance = None
+
+    data = {
+        "state": "debug",
+        "time_remaining": "time_remaining",
+        "robots": [],
+        "balls": []
+    }
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+    
+    def setBalls(self,balls):
+        self.data["balls"] = balls
+
+    def setRobots(self,robots):
+        self.data["robots"] = robots
+
+s1 = Singleton()
 
 # https://im-coder.com/wie-berechne-ich-den-schnittpunkt-zweier-linien-in-python.html
 def line_intersection(line1, line2):
@@ -63,7 +120,7 @@ print("Loading model")
 model = YOLO('./best_m.pt')  # load an official detection model
 print("Model loaded")
 
-results = model(source=2, stream=True,verbose=False) 
+results = model(source=0, stream=True,verbose=False) 
 
 now = datetime.now()
 time = now.second
@@ -170,3 +227,5 @@ for result in results:
     final = cv.cvtColor(resized, cv.COLOR_BGR2RGB)
 
     cv.imshow('img',final)
+
+
