@@ -30,19 +30,24 @@ if not exists("./.env"):
     print("https://github.com/redigermany/cas-robocup-master/#install")
     sys.exit()
 
-
-
 async def show_time(websocket):
-    while websocket.close_rcvd!=None:
-        message = datetime.datetime.utcnow().isoformat() + "Z"
+    while websocket.close_rcvd==None:
+        # message = datetime.datetime.utcnow().isoformat() + "Z"
         #await websocket.send(jsonpickle.encode(s1.data))
         await websocket.send("deine Mudda0") # Teamserver Datapackage
+        # message = await websocket.recv()
+        # print(f"message = {message}")
         await asyncio.sleep(1/10)
 
 async def do_start_websocket():
     WS_PORT = int(config.get("WS_PORT"))
-    async with websockets.serve(show_time, "localhost", WS_PORT):
-        print(f"Websocket listening on ws://localhost:{WS_PORT}")
+
+    WS_HOST = "localhost"
+    if(len(sys.argv)>1):
+        WS_HOST = sys.argv[1]
+
+    async with websockets.serve(show_time, WS_HOST, WS_PORT):
+        print(f"Websocket listening on ws://{WS_HOST}:{WS_PORT}")
         await asyncio.Future()  # run forever   
 
 def start_websocket():  
@@ -50,11 +55,9 @@ def start_websocket():
     
 # Start Server
 def startServer():
-    http = threading.Thread(target=runWebserver, daemon=True)
-    http.start()
+    # http = threading.Thread(target=runWebserver, daemon=True)
+    # http.start()
     start_websocket()
-
-
 
 if __name__ == "__main__":
     startServer()
