@@ -111,7 +111,7 @@ ds = DataStore()
 
 async def show_time(websocket):
     while websocket.close_rcvd==None:
-        await websocket.send(jsonpickle.encode({"type":"message","message":"deine Mudda0"})) # Teamserver Datapackage
+        # await websocket.send(jsonpickle.encode({"type":"message","message":"deine Mudda0"})) # Teamserver Datapackage
         message = await websocket.recv()
         json = jsonpickle.decode(message)
         if "type" in json:
