@@ -74,7 +74,6 @@ class DataStore(object):
     data = {
         "clients": {},
         "teamServer": {},
-        "frames": Frames(10)
     }
 
     def __new__(cls, *args, **kwargs):
@@ -91,29 +90,40 @@ class DataStore(object):
     def checkClient(self,id):
         return id in self.data["clients"]
 
-    def makeClientSure(self,id,websocket):
+    def addClient(self,id,websocket,user):
         if not self.checkClient(id):
-            self.data["clients"][id] = websocket
+            self.data["clients"][id] = {
+                "websocket":websocket,
+                "user":user
+            }
         return self.data["clients"][id]
         
     def removeClient(self,id):
         if self.checkClient(id):
             del self.data["clients"][id]
+    
+    def getClient(self,id):
+        if self.checkClient(id):
+            return self.data["clients"][id]["user"]
+        return None
 
 ds = DataStore()
 
 async def show_time(websocket):
     while websocket.close_rcvd==None:
-        client = ds.makeClientSure(websocket.id,websocket)
-        # message = datetime.datetime.utcnow().isoformat() + "Z"
-        #await websocket.send(jsonpickle.encode(s1.data))
         await websocket.send(jsonpickle.encode({"type":"message","message":"deine Mudda0"})) # Teamserver Datapackage
         message = await websocket.recv()
         json = jsonpickle.decode(message)
         if "type" in json:
             if json["type"]=="auth" and "token" in json:
                 if json["token"] in CASTOKEN:
-                    await websocket.send(jsonpickle.encode({"type":"authenticated"},unpicklable=False))
+                    user = CASTOKEN[json["token"]]
+                    ds.addClient(websocket.id,websocket,user)
+                    await websocket.send(jsonpickle.encode({"type":"authenticated","message":f"Welcome {user['UUID']}"},unpicklable=False))
+            user = ds.getClient(websocket.id)
+            if json["type"]=="data" and "data" in json and user:
+                print(f"Message from {user['UUID']}: {json}")
+        # print(json)
         await asyncio.sleep(1/10)
     ds.removeClient(websocket.id)
 
