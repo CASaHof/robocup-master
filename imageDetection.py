@@ -57,20 +57,20 @@ def loadData():
     top_right = (int(data[1].split("x")[0].split(".")[0]),int(data[1].split("x")[1].split('.')[0]))
     bottom_right = (int(data[2].split("x")[0].split(".")[0]),int(data[2].split("x")[1].split('.')[0]))
     bottom_left = (int(data[3].split("x")[0].split(".")[0]),int(data[3].split("x")[1].split('.')[0]))
-    return top_left, top_right, bottom_right, bottom_left
+    return top_left, top_right, bottom_right, bottom_left,width,height
     # print(data)
     
 def runDetection():
     s1 = singletonDataClass.Singleton()
     print("Loading Config")
-    top_left, top_right, bottom_right, bottom_left = loadData()
+    top_left, top_right, bottom_right, bottom_left,width,height = loadData()
     print("Config Loaded")
 
     print("Loading model")
     model = YOLO('./best_m.pt')  # load an official detection model
     print("Model loaded")
 
-    results = model(source=0, stream=True,verbose=False) 
+    results = model(source=2, stream=True,verbose=False) 
 
     now = datetime.now()
     time = now.second
