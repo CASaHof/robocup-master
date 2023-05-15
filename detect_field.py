@@ -9,6 +9,9 @@ import matplotlib
 import tkinter
 import sys
 
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+CAM_ID = int(config.get("CAM_ID"))
 
 model = YOLO('./yolov8x.pt')  # load an official detection model
 # Create a numpy array to store the selected points
@@ -81,7 +84,7 @@ def drawGameArea(img):
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
     plt.show()
 
-results = model(source=2, stream=True,verbose=False) 
+results = model(source=CAM_ID, stream=True,verbose=False) 
 t = True
 for result in results:
     # if(not points.any()):

@@ -19,6 +19,9 @@ import cv2 as cv
 from ultralytics import YOLO
 import singletonDataClass
 
+from dotenv import dotenv_values
+config = dotenv_values(".env")
+CAM_ID = int(config.get("CAM_ID"))
 
 def line_intersection(line1, line2):
     xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
@@ -70,7 +73,7 @@ def runDetection():
     model = YOLO('./best_m.pt')  # load an official detection model
     print("Model loaded")
 
-    results = model(source=2, stream=True,verbose=False) 
+    results = model(source=CAM_ID, stream=True,verbose=False) 
 
     now = datetime.now()
     time = now.second
