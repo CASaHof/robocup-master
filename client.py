@@ -50,8 +50,8 @@ async def establishConnection():
 
             if authed:
                 # while(True):
-                # await websocket.send("Hello")
-                print(f"message={message}")
+                await websocket.send(jsonpickle.encode({"type":"data","data":{}},unpicklable=False))
+                # print(f"message={message}")
     print("done?")
         
 
