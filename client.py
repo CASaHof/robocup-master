@@ -53,6 +53,7 @@ async def establishConnection():
             if authed:
                 while(True):
                     await websocket.send(jsonpickle.encode({"type":"data","data":s1.data},unpicklable=False))
+                    await asyncio.sleep(1/10)
                     #print(f"message={message}")
     print("done?")
         
