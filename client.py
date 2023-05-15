@@ -25,6 +25,7 @@ print("Welcome")
     
 async def establishConnection():
     WS_PORT = config.get("WS_PORT")
+    WS_AUTH = config.get("WS_AUTH")
     
     WS_HOST = "localhost"
     if(len(sys.argv)>1):
@@ -32,15 +33,25 @@ async def establishConnection():
 
     uri = f"ws://{WS_HOST}:{WS_PORT}"
 
+    authed = False
+
     print(f"Connecting to {uri}")
     async with websockets.connect(uri) as websocket:
         print(f"Connected to {uri}")
+        await websocket.send(jsonpickle.encode({"type":"auth","token":WS_AUTH},unpicklable=False))
         # print(jsonpickle.encode(websocket,unpicklable=False))
         while websocket.close_rcvd==None:
-            # while(True):
             message = await websocket.recv()
-            # await websocket.send("Hello")
-            print(f"message={message}")
+            json = jsonpickle.decode(message)
+            if "type" in json:
+                if json["type"]=="authenticated":
+                    authed = True
+                    print("Authenticated")
+
+            if authed:
+                # while(True):
+                # await websocket.send("Hello")
+                print(f"message={message}")
     print("done?")
         
 
