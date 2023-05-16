@@ -56,7 +56,7 @@ class Frame:
     ball: List[Ball] = []
 
 
-class Frames:
+class FrameCouples:
     _frames = []
     _current = -1
 
@@ -74,6 +74,25 @@ class Frames:
             self._current = 0
         self._frames[self._current] = data
 
+framecouples = FrameCouples(10)
+
+@dataclass
+class Bucket:
+    client1: Frame = None
+    client2: Frame = None
+
+    def addFrameClient1(self, frame: Frame):
+        self.client1 = frame
+        
+    def addFrameClient2(self, frame: Frame):
+        self.client2 = frame
+
+    def checkClientState(self):
+        if(self.client1 != None and self.client2 != None):
+            framecouples.update([self.client1,self.client2])
+            self.client1, self.client2 = None
+
+bucket = Bucket()
 # class Frame:
 #     _next = None
 #     _data = {}
@@ -148,6 +167,7 @@ async def show_time(websocket):
             #    print(f"Message from {user['UUID']}: {json}")
         #print(json)
         if "data" in json:
+            user = ds.getClient(websocket.id)
             newFrame = Frame()
             newFrame.robot = []
             newFrame.ball = []
@@ -161,8 +181,13 @@ async def show_time(websocket):
                 for idx in json["data"]["robots"]:
                     temp = Robot.from_dict(idx)
                     newFrame.robot.append(temp)
-            print(newFrame.robot)
+            #print(newFrame.robot)
             #print(newFrame.ball)
+            print(user)
+            if(user["UUID"] == "Client-1"):
+                bucket.addFrameClient1(newFrame)
+            if(user["UUID"] == "Client-2"):
+                bucket.addFrameClient2(newFrame)
         await asyncio.sleep(1/10)
     ds.removeClient(websocket.id)
 
