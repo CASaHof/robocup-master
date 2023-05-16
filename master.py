@@ -1,6 +1,7 @@
 from datetime import datetime
 import random
 import threading
+from typing import List
 from ultralytics import YOLO
 from yt_dlp import YoutubeDL
 from os.path import exists
@@ -9,6 +10,8 @@ from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 
 import asyncio
 import websockets
@@ -33,6 +36,26 @@ if not exists("./.env"):
     print("https://github.com/redigermany/cas-robocup-master/#install")
     sys.exit()
 
+@dataclass_json
+@dataclass
+class Ball:
+    x: int
+    y: int
+
+@dataclass_json
+@dataclass
+class Robot:
+    x: int
+    y: int
+    id: str
+    angle: int
+
+class Frame:
+    time: int = 0
+    robot: List[Robot] = []
+    ball: List[Ball] = []
+
+
 class Frames:
     _frames = []
     _current = -1
@@ -51,21 +74,21 @@ class Frames:
             self._current = 0
         self._frames[self._current] = data
 
-class Frame:
-    _next = None
-    _data = {}
+# class Frame:
+#     _next = None
+#     _data = {}
 
-    def __new__(cls,data):
-        cls._data = data
+#     def __new__(cls,data):
+#         cls._data = data
     
-    def hasNext(self):
-        return self._next!=None
+#     def hasNext(self):
+#         return self._next!=None
     
-    def next(self):
-        return self._next
+#     def next(self):
+#         return self._next
     
-    def get(self):
-        return self._data
+#     def get(self):
+#         return self._data
 
 
 class DataStore(object):
@@ -121,9 +144,25 @@ async def show_time(websocket):
                     ds.addClient(websocket.id,websocket,user)
                     await websocket.send(jsonpickle.encode({"type":"authenticated","message":f"Welcome {user['UUID']}"},unpicklable=False))
             user = ds.getClient(websocket.id)
-            if json["type"]=="data" and "data" in json and user:
-                print(f"Message from {user['UUID']}: {json}")
-        # print(json)
+            #if json["type"]=="data" and "data" in json and user:
+            #    print(f"Message from {user['UUID']}: {json}")
+        #print(json)
+        if "data" in json:
+            newFrame = Frame()
+            newFrame.robot = []
+            newFrame.ball = []
+            if "time" in json["data"]:
+                newFrame.time = json["data"]["time"]
+            if "balls" in json["data"]:
+                for idx in json["data"]["balls"]:
+                    temp = Ball.from_dict(idx)
+                    newFrame.ball.append(temp)
+            if "robots" in json["data"]:
+                for idx in json["data"]["robots"]:
+                    temp = Robot.from_dict(idx)
+                    newFrame.robot.append(temp)
+            print(newFrame.robot)
+            #print(newFrame.ball)
         await asyncio.sleep(1/10)
     ds.removeClient(websocket.id)
 

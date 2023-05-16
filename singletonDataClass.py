@@ -1,21 +1,22 @@
-from enum import Enum
+#from enum import Enum
+from datetime import datetime
 
-class EGameState(Enum):
-    PLAYING = 1
-    PAUSED = 2
-    FOUL = 3
-    ENDED = 4
-    GOAL = 5
+# class EGameState(Enum):
+#     PLAYING = 1
+#     PAUSED = 2
+#     FOUL = 3
+#     ENDED = 4
+#     GOAL = 5
 
-class GameState:
-    state:EGameState = EGameState.PAUSED
+# class GameState:
+#     state:EGameState = EGameState.PAUSED
 
 class Singleton(object):
     _instance = None
 
     data = {
+        "time": "time",
         "state": "debug",
-        "time_remaining": "time_remaining",
         "robots": [],
         "balls": []
     }
@@ -27,6 +28,13 @@ class Singleton(object):
     
     def setBalls(self,balls):
         self.data["balls"] = balls
+        self.setTime(datetime.now())
 
     def setRobots(self,robots):
         self.data["robots"] = robots
+        self.setTime(datetime.now())
+
+    def setTime(self,time):
+        self.data["time"] = time
+
+        
