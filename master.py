@@ -68,9 +68,9 @@ async def show_time(websocket):
                     newFrame.robot.append(temp)
             #print(newFrame.robot)
             #print(newFrame.ball)
-            if(user["UUID"] == "Client-1"):
+            if(user.UUID == "Client-1"):
                 bucket.addFrameClient1(newFrame)
-            if(user["UUID"] == "Client-2"):
+            if(user.UUID == "Client-2"):
                 bucket.addFrameClient2(newFrame)
             bucket.checkClientState()
         await asyncio.sleep(1/10)
