@@ -6,7 +6,7 @@ import websockets
 
 from src import Singleton,CASENV
 
-from imageDetection import runDetection
+from src.imageDetection import runDetection
 
 print("Welcome")
 

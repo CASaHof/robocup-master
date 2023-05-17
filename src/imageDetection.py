@@ -1,27 +1,13 @@
-   
 # https://im-coder.com/wie-berechne-ich-den-schnittpunkt-zweier-linien-in-python.html
-import asyncio
 from datetime import datetime
-from enum import Enum
-import random
-import sys
-import threading
-import jsonpickle
 from ultralytics import YOLO
-import websockets
-from yt_dlp import YoutubeDL
-from os.path import exists
-import time
 from PIL import Image, ImageDraw
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2 as cv
 from ultralytics import YOLO
-from src.classes.singletonDataClass import Singleton
+from src import Singleton,CASENV
 
-from dotenv import dotenv_values
-config = dotenv_values(".env")
-CAM_ID = int(config.get("CAM_ID"))
+CAM_ID = CASENV.CAM_ID
 
 def line_intersection(line1, line2):
     xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
@@ -39,8 +25,8 @@ def line_intersection(line1, line2):
     y = det(d, ydiff) / div
     return x, y
 
-width = 640
-height = 480
+width = CASENV.VIDEO_WIDTH
+height = CASENV.VIDEO_HEIGHT
 
 top_left = (125,175)
 top_right = (width-140,175)
@@ -52,8 +38,8 @@ def loadData():
     # global top_right
     # global bottom_right
     # global bottom_left
-    width = 640
-    height = 480
+    width = CASENV.VIDEO_WIDTH
+    height = CASENV.VIDEO_HEIGHT
     f = open("field", "r")
     data = f.read().splitlines()
     top_left = (int(data[0].split("x")[0].split(".")[0]),int(data[0].split("x")[1].split('.')[0]))
@@ -70,7 +56,7 @@ def runDetection():
     print("Config Loaded")
 
     print("Loading model")
-    model = YOLO('./best_m.pt')  # load an official detection model
+    model = YOLO('./networks/best_m.pt')  # load an official detection model
     print("Model loaded")
 
     results = model(source=CAM_ID, stream=True,verbose=False) 
