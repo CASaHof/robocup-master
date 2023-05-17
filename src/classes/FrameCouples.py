@@ -16,3 +16,4 @@ class FrameCouples:
         if self._current >= len(self._frames):
             self._current = 0
         self._frames[self._current] = data
+

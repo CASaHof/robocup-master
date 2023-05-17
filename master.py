@@ -1,4 +1,5 @@
 import asyncio
+import threading
 import websockets
 import jsonpickle
 import sys
@@ -64,7 +65,13 @@ async def show_time(websocket):
                 bucket.addFrameClient1(newFrame)
             if(user.UUID == "Client-2"):
                 bucket.addFrameClient2(newFrame)
-            bucket.checkClientState()
+            client1,client2 = bucket.checkClientState()
+            if(client1 != None or client2 != None ):
+                print(client1)
+                framecouples.update([client1, client2])
+
+
+
         await asyncio.sleep(1/10)
     ds.removeClient(websocket.id)
 
@@ -84,8 +91,8 @@ def start_websocket():
     
 # Start Server
 def startServer():
-    # http = threading.Thread(target=runWebserver, daemon=True)
-    # http.start()
+    http = threading.Thread(target=runWebserver, daemon=True)
+    http.start()
     start_websocket()
 
 if __name__ == "__main__":
