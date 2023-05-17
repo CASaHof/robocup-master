@@ -3,16 +3,8 @@ import websockets
 import jsonpickle
 import sys
 
-from src.classes.DataStore import DataStore
-from src.classes.FrameCouples import FrameCouples
-from src.classes.Frame import Frame
-from src.classes.Ball import Ball
-from src.classes.Robot import Robot
-from src.classes.Bucket import Bucket
-from src.CASENV import CASENV
+from src import DataStore, FrameCouples, Frame, Ball, Robot, Bucket,CASENV,runWebserver
 from CASTOKEN import CASTOKEN
-
-from src.web.server import runWebserver
 
 framecouples = FrameCouples(10)
 

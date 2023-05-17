@@ -3,20 +3,18 @@ import sys
 import threading
 import jsonpickle
 import websockets
+
+from src import Singleton,CASENV
+
 from imageDetection import runDetection
-from src.classes.singletonDataClass import Singleton
-
-from dotenv import dotenv_values
-config = dotenv_values(".env")
-
 
 print("Welcome")
 
 s1 = Singleton()
     
 async def establishConnection():
-    WS_PORT = config.get("WS_PORT")
-    WS_AUTH = config.get("WS_AUTH")
+    WS_PORT = CASENV.WS_PORT
+    WS_AUTH = CASENV.WS_AUTH
     
     WS_HOST = "localhost"
     if(len(sys.argv)>1):
