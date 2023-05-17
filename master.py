@@ -1,91 +1,22 @@
-from typing import List
-from os.path import exists
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json
-
 import asyncio
 import websockets
 import jsonpickle
+import sys
 
-from dotenv import dotenv_values
+from src.classes.DataStore import DataStore
+from src.classes.FrameCouples import FrameCouples
+from src.classes.Frame import Frame
+from src.classes.Ball import Ball
+from src.classes.Robot import Robot
+from src.classes.Bucket import Bucket
+from src.CASENV import CASENV
 from CASTOKEN import CASTOKEN
-
-
-config = dotenv_values(".env")
 
 from src.web.server import runWebserver
 
-from os.path import exists
-import sys
-
-if not exists("./.env"):
-    print("[ERROR] .env not found. Did you install?")
-    print("https://github.com/redigermany/cas-robocup-master/#install")
-    sys.exit()
-
-@dataclass_json
-@dataclass
-class Ball:
-    x: int
-    y: int
-
-@dataclass_json
-@dataclass
-class Robot:
-    x: int
-    y: int
-    id: str
-    angle: int
-
-class Frame:
-    time: int = 0
-    robot: List[Robot] = []
-    ball: List[Ball] = []
-
-
-class FrameCouples:
-    _frames = []
-    _current = -1
-
-    def __init__(cls,l):
-        print(f"Creating new Frames with length {l}")
-        for i in range(l):
-            cls._frames.append(None)
-
-    def getAll(self):
-        return self._frames
-
-    def update(self,data):
-        self._current = self._current + 1
-        if self._current >= len(self._frames):
-            self._current = 0
-        self._frames[self._current] = data
-
 framecouples = FrameCouples(10)
 
-@dataclass
-class Bucket:
-    client1: Frame = None
-    client2: Frame = None
-
-    def addFrameClient1(self, frame: Frame):
-        print("client1")
-        self.client1 = frame
-        self.checkClientState()
-
-    def addFrameClient2(self, frame: Frame):
-        print("client2")
-        self.client2 = frame
-        self.checkClientState()
-
-    def checkClientState(self):
-        if(self.client1 != None and self.client2 != None):
-            print("updated")
-            framecouples.update([self.client1,self.client2])
-            self.client1 = None
-            self.client2 = None
-
-bucket = Bucket()
+bucket = Bucket(framecouples)
 # class Frame:
 #     _next = None
 #     _data = {}
@@ -102,45 +33,6 @@ bucket = Bucket()
 #     def get(self):
 #         return self._data
 
-
-class DataStore(object):
-    _instance = None
-
-    data = {
-        "clients": {},
-        "teamServer": {},
-    }
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(DataStore, cls).__new__(cls, *args, **kwargs)
-        return cls._instance
-    
-    def setBalls(self,balls):
-        self.data["balls"] = balls
-
-    def setRobots(self,robots):
-        self.data["robots"] = robots
-
-    def checkClient(self,id):
-        return id in self.data["clients"]
-
-    def addClient(self,id,websocket,user):
-        if not self.checkClient(id):
-            self.data["clients"][id] = {
-                "websocket":websocket,
-                "user":user
-            }
-        return self.data["clients"][id]
-        
-    def removeClient(self,id):
-        if self.checkClient(id):
-            del self.data["clients"][id]
-    
-    def getClient(self,id):
-        if self.checkClient(id):
-            return self.data["clients"][id]["user"]
-        return None
 
 ds = DataStore()
 
@@ -185,7 +77,7 @@ async def show_time(websocket):
     ds.removeClient(websocket.id)
 
 async def do_start_websocket():
-    WS_PORT = int(config.get("WS_PORT"))
+    WS_PORT = CASENV.WS_PORT
 
     WS_HOST = "localhost"
     if(len(sys.argv)>1):
