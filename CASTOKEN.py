@@ -6,11 +6,12 @@ class Token:
         self.UUID = UUID
         self.type = type
 
-class Client(Token):
+class CameraClient(Token):
     def __init__(self,UUID:str) -> None:
         super().__init__(UUID,"client")
 
 CASTOKEN = {
-    "po1JTmRxNCQOCLn7MJAT": Client("Client-1"),
-    "hm1qUiCgRG9L3pLmvEgW": Client("Client-2")
+    "po1JTmRxNCQOCLn7MJAT": CameraClient("CameraClient-1"),
+    "hm1qUiCgRG9L3pLmvEgW": CameraClient("CameraClient-2"),
+    "WOtEpKyRaD3cLKIcQG5J": CameraClient("CameraClient-3")
 }
