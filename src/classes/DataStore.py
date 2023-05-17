@@ -1,4 +1,4 @@
-from CASTOKEN import Client
+from CASTOKEN import CameraClient
 
 
 class DataStore(object):
@@ -35,7 +35,7 @@ class DataStore(object):
         if self.checkClient(id):
             del self.data["clients"][id]
     
-    def getClient(self,id:str) -> Client:
+    def getClient(self,id:str) -> CameraClient:
         if self.checkClient(id):
             return self.data["clients"][id]["user"]
         return None
