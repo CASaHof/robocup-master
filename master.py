@@ -39,7 +39,7 @@ async def show_time(websocket):
                 if json["token"] in CASTOKEN:
                     user = CASTOKEN[json["token"]]
                     ds.addClient(websocket.id,websocket,user)
-                    await websocket.send(jsonpickle.encode({"type":"authenticated","message":f"Welcome {user['UUID']}"},unpicklable=False))
+                    await websocket.send(jsonpickle.encode({"type":"authenticated","message":f"Welcome {user.UUID}"},unpicklable=False))
             user = ds.getClient(websocket.id)
             #if json["type"]=="data" and "data" in json and user:
             #    print(f"Message from {user['UUID']}: {json}")
