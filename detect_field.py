@@ -1,19 +1,14 @@
-from ultralytics import YOLO#
-from yt_dlp import YoutubeDL
-from os.path import exists
+import cv2
 import time
-from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-import tkinter
 import sys
 
-from dotenv import dotenv_values
-config = dotenv_values(".env")
-CAM_ID = int(config.get("CAM_ID"))
 
-model = YOLO('./yolov8x.pt')  # load an official detection model
+from src.CASENV import CASENV
+
+# model = YOLO('./yolov8x.pt')  # load an official detection model
 # Create a numpy array to store the selected points
 points = np.zeros((0, 2))
 
@@ -84,10 +79,18 @@ def drawGameArea(img):
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
     plt.show()
 
-results = model(source=CAM_ID, stream=True,verbose=False) 
-t = True
-for result in results:
-    # if(not points.any()):
-    if t:
-        drawGameArea(result.orig_img)
-        t = False
+
+
+width = 640.0
+height = 480.0
+capture = cv2.VideoCapture(CASENV.CAM_ID)
+capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+ret, frame = capture.read()
+time.sleep(1/3)
+
+
+while(not points.any()):
+    ret, frame = capture.read()
+    cv2.imshow(".",frame)
+    cv2.waitKey()
