@@ -1,24 +1,11 @@
-from datetime import datetime
-import random
-import threading
 from typing import List
-from ultralytics import YOLO
-from yt_dlp import YoutubeDL
 from os.path import exists
-import time
-from PIL import Image, ImageDraw
-import numpy as np
-import matplotlib.pyplot as plt
-import cv2 as cv
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 
 import asyncio
 import websockets
 import jsonpickle
-import threading
-
-from enum import Enum
 
 from dotenv import dotenv_values
 from CASTOKEN import CASTOKEN
@@ -82,15 +69,19 @@ class Bucket:
     client2: Frame = None
 
     def addFrameClient1(self, frame: Frame):
+        print("client1")
         self.client1 = frame
         
     def addFrameClient2(self, frame: Frame):
+        print("client2")
         self.client2 = frame
 
     def checkClientState(self):
         if(self.client1 != None and self.client2 != None):
+            print("updated")
             framecouples.update([self.client1,self.client2])
-            self.client1, self.client2 = None
+            self.client1 = None
+            self.client2 = None
 
 bucket = Bucket()
 # class Frame:
@@ -183,11 +174,12 @@ async def show_time(websocket):
                     newFrame.robot.append(temp)
             #print(newFrame.robot)
             #print(newFrame.ball)
-            print(user)
+            # print(user)
             if(user["UUID"] == "Client-1"):
                 bucket.addFrameClient1(newFrame)
             if(user["UUID"] == "Client-2"):
                 bucket.addFrameClient2(newFrame)
+            bucket.checkClientState()
         await asyncio.sleep(1/10)
     ds.removeClient(websocket.id)
 
