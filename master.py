@@ -83,9 +83,11 @@ class Bucket:
 
     def addFrameClient1(self, frame: Frame):
         self.client1 = frame
-        
+        self.checkClientState()
+
     def addFrameClient2(self, frame: Frame):
         self.client2 = frame
+        self.checkClientState()
 
     def checkClientState(self):
         if(self.client1 != None and self.client2 != None):
@@ -183,7 +185,7 @@ async def show_time(websocket):
                     newFrame.robot.append(temp)
             #print(newFrame.robot)
             #print(newFrame.ball)
-            print(user)
+            #print(user)
             if(user["UUID"] == "Client-1"):
                 bucket.addFrameClient1(newFrame)
             if(user["UUID"] == "Client-2"):
