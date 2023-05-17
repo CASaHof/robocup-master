@@ -17,7 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2 as cv
 from ultralytics import YOLO
-import singletonDataClass
+from src.classes.singletonDataClass import Singleton
 
 from dotenv import dotenv_values
 config = dotenv_values(".env")
@@ -64,7 +64,7 @@ def loadData():
     # print(data)
     
 def runDetection():
-    s1 = singletonDataClass.Singleton()
+    s1 = Singleton()
     print("Loading Config")
     top_left, top_right, bottom_right, bottom_left,width,height = loadData()
     print("Config Loaded")

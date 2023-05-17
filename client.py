@@ -4,7 +4,7 @@ import threading
 import jsonpickle
 import websockets
 from imageDetection import runDetection
-import singletonDataClass
+from src.classes.singletonDataClass import Singleton
 
 from dotenv import dotenv_values
 config = dotenv_values(".env")
@@ -12,7 +12,7 @@ config = dotenv_values(".env")
 
 print("Welcome")
 
-s1 = singletonDataClass.Singleton()
+s1 = Singleton()
     
 async def establishConnection():
     WS_PORT = config.get("WS_PORT")
