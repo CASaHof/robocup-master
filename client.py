@@ -1,19 +1,8 @@
 import asyncio
-from datetime import datetime
-from enum import Enum
-import random
 import sys
 import threading
 import jsonpickle
-from ultralytics import YOLO
 import websockets
-from yt_dlp import YoutubeDL
-from os.path import exists
-import time
-from PIL import Image, ImageDraw
-import numpy as np
-import matplotlib.pyplot as plt
-import cv2 as cv
 from imageDetection import runDetection
 import singletonDataClass
 
