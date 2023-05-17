@@ -3,3 +3,4 @@ yt_dlp
 websockets
 jsonpickle
 python-dotenv
+dataclasses-json
