@@ -92,5 +92,6 @@ time.sleep(1/3)
 
 while(not points.any()):
     ret, frame = capture.read()
-    cv2.imshow(".",frame)
-    cv2.waitKey()
+    drawGameArea(frame)
+    # cv2.imshow(".",frame)
+    # cv2.waitKey()
