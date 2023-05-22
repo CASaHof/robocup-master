@@ -25,23 +25,27 @@ async def establishConnection():
     authed = False
 
     print(f"Connecting to {uri}")
-    async with websockets.connect(uri) as websocket:
-        print(f"Connected to {uri}")
-        await websocket.send(jsonpickle.encode({"type":"auth","token":WS_AUTH},unpicklable=False))
-        # print(jsonpickle.encode(websocket,unpicklable=False))
-        while websocket.close_rcvd==None:
-            message = await websocket.recv()
-            json = jsonpickle.decode(message)
-            if "type" in json:
-                if json["type"]=="authenticated":
-                    authed = True
-                    print("Authenticated")
+    while True:
+        try:
+            async with websockets.connect(uri) as websocket:
+                print(f"Connected to {uri}")
+                await websocket.send(jsonpickle.encode({"type":"auth","token":WS_AUTH},unpicklable=False))
+                # print(jsonpickle.encode(websocket,unpicklable=False))
+                while websocket.close_rcvd==None:
+                    message = await websocket.recv()
+                    json = jsonpickle.decode(message)
+                    if "type" in json:
+                        if json["type"]=="authenticated":
+                            authed = True
+                            print("Authenticated")
 
-            if authed:
-                while(True):
-                    await websocket.send(jsonpickle.encode({"type":"data","data":s1.data},unpicklable=False))
-                    await asyncio.sleep(1/10)
-                    #print(f"message={message}")
+                    if authed:
+                        while(True):
+                            await websocket.send(jsonpickle.encode({"type":"data","data":s1.data},unpicklable=False))
+                            await asyncio.sleep(1/10)
+                            #print(f"message={message}")
+        except:
+            pass
     print("done?")
         
 

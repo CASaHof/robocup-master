@@ -59,16 +59,17 @@ async def show_time(websocket):
                 for idx in json["data"]["robots"]:
                     temp = Robot.from_dict(idx)
                     newFrame.robot.append(temp)
-            #print(newFrame.robot)
+            # print(newFrame.robot)
             #print(newFrame.ball)
-            if(user.UUID == "Client-1"):
-                bucket.addFrameClient1(newFrame)
-            if(user.UUID == "Client-2"):
-                bucket.addFrameClient2(newFrame)
-            client1,client2 = bucket.checkClientState()
-            if(client1 != None or client2 != None ):
-                print(client1)
-                framecouples.update([client1, client2])
+            if len(newFrame.robot)>0 or len(newFrame.ball)>0:
+                if(user.UUID == "Client-1"):
+                    bucket.addFrameClient1(newFrame)
+                if(user.UUID == "Client-2"):
+                    bucket.addFrameClient2(newFrame)
+                client1,client2 = bucket.checkClientState()
+                if(client1 != None or client2 != None ):
+                    print(client1)
+                    framecouples.update([client1, client2])
 
 
 
