@@ -4,7 +4,7 @@ class FrameCouples:
     _current = -1
 
     def __init__(cls,l=10):
-        print(f"Creating new Frames with length {l}")
+        # print(f"Creating new Frames with length {l}")
         for i in range(l):
             cls._frames.append(None)
 

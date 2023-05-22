@@ -30,10 +30,7 @@ class Bucket:
 
     def checkClientState(self):
         if(self.client1 != None and self.client2 != None):
-            self.print("updated")
-            client1 = self.client1.copy()
-            client2 = self.client2.copy()
-            self.client1 = None
-            self.client2 = None
+            client1 = self.client1
+            client2 = self.client2
             return client1,client2
         return None,None

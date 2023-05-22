@@ -30,6 +30,7 @@ bucket = Bucket(framecouples)
 ds = DataStore()
 
 async def show_time(websocket):
+    global bucket
     while websocket.close_rcvd==None:
         # await websocket.send(jsonpickle.encode({"type":"message","message":"deine Mudda0"})) # Teamserver Datapackage
         message = await websocket.recv()
@@ -60,15 +61,16 @@ async def show_time(websocket):
                     temp = Robot.from_dict(idx)
                     newFrame.robot.append(temp)
             # print(newFrame.robot)
-            #print(newFrame.ball)
+            # print(user.UUID,newFrame.ball)
             if len(newFrame.robot)>0 or len(newFrame.ball)>0:
-                if(user.UUID == "Client-1"):
+                if(user.UUID == "CameraClient-1"):
                     bucket.addFrameClient1(newFrame)
-                if(user.UUID == "Client-2"):
+                if(user.UUID == "CameraClient-2"):
                     bucket.addFrameClient2(newFrame)
                 client1,client2 = bucket.checkClientState()
                 if(client1 != None or client2 != None ):
-                    print(client1)
+                    print("New Frame")
+                    bucket = Bucket(FrameCouples())
                     framecouples.update([client1, client2])
 
 
