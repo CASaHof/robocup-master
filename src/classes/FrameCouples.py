@@ -17,3 +17,5 @@ class FrameCouples:
             self._current = 0
         self._frames[self._current] = data
 
+    def getCurrent(self):
+        return self._frames[self._current]

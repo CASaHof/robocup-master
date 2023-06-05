@@ -6,21 +6,28 @@ For that we use [YOLOv8](https://github.com/ultralytics/ultralytics) to detect t
 
 We use one cameras on each side so calculate the positions for that.
 
+# Effective field size:
+
+4.5m x 2.5m
+
 # Installation
 
 ## Windows
+
 ```bash
 copy .env.example .env
 pip install -r requirements.txt
 ```
 
 ## Unix
+
 ```bash
 cp .env.example .env
 pip install -r requirements.txt
 ```
 
 # Usage
+
 ```bash
 python server.py
 ```
@@ -42,32 +49,32 @@ We will serve a websocket server for the team server to connect to where we will
 
 ```json
 {
-    "state": "string",
-    "time_remaining": "number",
-    "teams": [
-        {
-            "name": "string",
-            "score": "number"
-        },
-        {
-            "name": "string",
-            "score": "number"
-        }
-    ],
-    "robots": [
-        {
-            "x": "number",
-            "y": "number",
-            "id": "UUID",
-            "angle": "number"
-        }
-    ],
-    "balls": [
-        {
-            "x": "number",
-            "y": "number",
-        }   
-    ]
+  "state": "string",
+  "time_remaining": "number",
+  "teams": [
+    {
+      "name": "string",
+      "score": "number"
+    },
+    {
+      "name": "string",
+      "score": "number"
+    }
+  ],
+  "robots": [
+    {
+      "x": "number",
+      "y": "number",
+      "id": "UUID",
+      "angle": "number"
+    }
+  ],
+  "balls": [
+    {
+      "x": "number",
+      "y": "number"
+    }
+  ]
 }
 ```
 
@@ -76,9 +83,11 @@ The `state` can be one of the following: `playing`, `paused`, `foul`, `ended`, `
 The `time_remaining` is an integer of the remaining seconds to play.
 
 ## Übersicht Spielfeld
+
 ![Alt text](images/top%20down.png)
 
 ## Exemplarische Ansicht der Kamera
+
 ![Alt text](images/empty%20field.png)
 
 ![Alt text](images/field.png)

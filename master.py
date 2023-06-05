@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 import threading
 import websockets
 import jsonpickle
@@ -6,6 +7,7 @@ import sys
 
 from src import DataStore, FrameCouples, Frame, Ball, Robot, Bucket,CASENV,runWebserver
 from CASTOKEN import CASTOKEN
+from src.lib.normalizePositions import normalizePositions
 
 framecouples = FrameCouples(10)
 
@@ -31,6 +33,12 @@ ds = DataStore()
 
 async def show_time(websocket):
     global bucket
+    
+    now = datetime.now()
+    time = now.second
+    fps = 0
+
+
     while websocket.close_rcvd==None:
         # await websocket.send(jsonpickle.encode({"type":"message","message":"deine Mudda0"})) # Teamserver Datapackage
         message = await websocket.recv()
@@ -69,9 +77,21 @@ async def show_time(websocket):
                     bucket.addFrameClient2(newFrame)
                 client1,client2 = bucket.checkClientState()
                 if(client1 != None or client2 != None ):
-                    print("New Frame")
+                    now = datetime.now()
+                    currtime = now.second
+                    if currtime != time:
+                        print(f"FPS = {fps}")
+                        time = currtime
+                        fps = 0
+                    else:
+                        fps = fps + 1 
                     bucket = Bucket(FrameCouples())
                     framecouples.update([client1, client2])
+                    # c1, c2 = framecouples.getCurrent()
+                    # for robot in client1.robot:
+                    # print(client1.robot,client2.robot)
+                    t = normalizePositions(client1.robot,client2.robot)
+                    print(t)
 
 
 

@@ -33,27 +33,53 @@ top_right = (width-140,175)
 bottom_left = (-30,height-120)
 bottom_right = (width+5,height-120)
 
+
 def loadData():
     # global top_left
     # global top_right
     # global bottom_right
     # global bottom_left
-    width = CASENV.VIDEO_WIDTH
-    height = CASENV.VIDEO_HEIGHT
+    width = 640
+    height = 480
     f = open("field", "r")
     data = f.read().splitlines()
     top_left = (int(data[0].split("x")[0].split(".")[0]),int(data[0].split("x")[1].split('.')[0]))
     top_right = (int(data[1].split("x")[0].split(".")[0]),int(data[1].split("x")[1].split('.')[0]))
     bottom_right = (int(data[2].split("x")[0].split(".")[0]),int(data[2].split("x")[1].split('.')[0]))
     bottom_left = (int(data[3].split("x")[0].split(".")[0]),int(data[3].split("x")[1].split('.')[0]))
-    return top_left, top_right, bottom_right, bottom_left,width,height
+    bottom_center = (int(data[4].split("x")[0].split(".")[0]),int(data[4].split("x")[1].split('.')[0]))
+    center = (int(data[5].split("x")[0].split(".")[0]),int(data[5].split("x")[1].split('.')[0]))
+    top_center = (int(data[6].split("x")[0].split(".")[0]),int(data[6].split("x")[1].split('.')[0]))
+    return top_left, top_right, bottom_right, bottom_left,width,height,bottom_center,center,top_center
     # print(data)
     
 def runDetection():
     s1 = Singleton()
     print("Loading Config")
-    top_left, top_right, bottom_right, bottom_left,width,height = loadData()
+    top_left, top_right, bottom_right, bottom_left,width,height,bottom_center,center,top_center = loadData()
     print("Config Loaded")
+
+    top = (top_left[1]+top_right[1])/2
+    bottom = (bottom_left[1]+bottom_right[1])/2
+    # s = [top_left, top_right, bottom_right, bottom_left]
+    # print(top_left, top_right, bottom_right, bottom_left,width,height,middle_left)
+    print(f"top={top} center={center} bottom={bottom}")
+
+    # x = np.array([top_center[0],top_center[0],center[0],bottom_center[0],bottom_center[0]])
+    # y = np.array([top,top_center[1],center[1],bottom_center[1],bottom])
+    w = top_right[0]-top_left[0]
+    h = top_right[1]-bottom_right[1]
+    # x = np.array([bottom_center[0]/100*w,bottom_center[0]/100*w,center[0]/100*w,top_center[0]/100*w,top_center[0]/100*w])
+    x = np.array([bottom,bottom_center[0],center[0],top_center[0],top])
+    # x = np.array([1,1,1,1,1])
+    # y = np.array([bottom/100*h,bottom_center[1]/100*h,center[1]/100*h,top_center[1]/100*h,top/100*h])
+    # y = np.array([0,1,0.5,3.5,4.5])
+    y = np.array([0,1/4.5,0.5,3.5/4.5,1])
+    print(w,h,x,y)
+
+    # calculate polynomial
+    z = np.polyfit(x, y, 5)
+    f = np.poly1d(z)
 
     print("Loading model")
     model = YOLO('./networks/best_m.pt')  # load an official detection model
@@ -108,7 +134,7 @@ def runDetection():
                 #     img1.rectangle([
                 #         (0,position_y-1),
                 #         (position_x+1,position_y+1)
-                #     ], fill ="blue")
+                #     ], fill ="red")
 
                 # if bottom_intersection:
                 #     img1.rectangle([
@@ -119,13 +145,17 @@ def runDetection():
                 #     img1.rectangle([
                 #         (position_x,position_y),
                 #         (position_x+1,height)
-                #     ], fill ="blue")
+                #     ], fill ="red")
                 
                 if left_intersection and bottom_intersection and right_intersection and top_intersection:
                     x_percent = int(((position_x - left_intersection[0]) / (right_intersection[0] - left_intersection[0])) * 100)/100
                     y_percent = int(((position_y - bottom_intersection[1]) / (top_intersection[1] - bottom_intersection[1])) * 100)/100
+                    y_percent1 = f(int(position_y))
 
                     if result.names[int(c)]=="ball":
+                        print(f"x_percent={x_percent} y_percent={y_percent} y_percent1={y_percent1}")
+                        # print(x_percent)
+                        # print(y_percent)
                         balls.append({"x":x_percent,"y":y_percent})
 
                     if result.names[int(c)]=="robot":
@@ -143,14 +173,15 @@ def runDetection():
                         outline = "#4ae53a"
 
                     # img1.rectangle(shape, outline = outline, width=2)
+                    # print(inArea)
                     if inArea:
                         img1.text((position_x-1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                         img1.text((position_x-1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                         img1.text((position_x+1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                         img1.text((position_x+1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
                         img1.text((position_x,boxes.xyxy[idx][1]-20), fill ="#ffffff", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
-            # else:
-                # print(result.names[int(c)])
+                # else:
+                    # print(result.names[int(c)])
         s1.setBalls(balls)
         s1.setRobots(robots)
 

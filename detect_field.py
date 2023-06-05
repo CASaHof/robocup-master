@@ -1,3 +1,4 @@
+import math
 import cv2
 import time
 import numpy as np
@@ -42,11 +43,14 @@ def order_points(points):
 def parseData(data):
     print(data)
     f = open("field", "w")
-    data = order_points(data)
-    f.write(f"{data[0][0]}x{data[0][1]}\n")
-    f.write(f"{data[1][0]}x{data[1][1]}\n")
-    f.write(f"{data[2][0]}x{data[2][1]}\n")
-    f.write(f"{data[3][0]}x{data[3][1]}\n")
+    # data = order_points(data)
+    for line in data:
+        f.write(f"{line[0]}x{line[1]}\n")
+        # f.write(f"{data[1][0]}x{data[1][1]}\n")
+        # f.write(f"{data[2][0]}x{data[2][1]}\n")
+        # f.write(f"{data[3][0]}x{data[3][1]}\n")
+        # f.write(f"{data[4][0]}x{data[4][1]}\n")
+        # f.write(f"{data[5][0]}x{data[5][1]}\n")
     f.close()
 
 def drawGameArea(img):
@@ -64,7 +68,7 @@ def drawGameArea(img):
             return
         # Append the selected point to the array
         points = np.vstack((points, [int(event.xdata), int(event.ydata)]))
-        if len(points) == 4:
+        if len(points) == 7:
             parseData(points)
             sys.exit()
         # Update the plot with the selected point
@@ -79,7 +83,7 @@ def drawGameArea(img):
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
     plt.show()
 
-
+print("ne")
 
 width = 640.0
 height = 480.0
@@ -87,11 +91,16 @@ capture = cv2.VideoCapture(CASENV.CAM_ID)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 ret, frame = capture.read()
+print("doch?")
 time.sleep(1/3)
 
 
-while(not points.any()):
+found = False
+
+while(not found):
+    print("check?")
     ret, frame = capture.read()
     drawGameArea(frame)
-    # cv2.imshow(".",frame)
-    # cv2.waitKey()
+    found = points.any()
+    cv2.imshow(".",frame)
+    cv2.waitKey()
