@@ -61,25 +61,17 @@ def runDetection():
 
     top = (top_left[1]+top_right[1])/2
     bottom = (bottom_left[1]+bottom_right[1])/2
-    # s = [top_left, top_right, bottom_right, bottom_left]
-    # print(top_left, top_right, bottom_right, bottom_left,width,height,middle_left)
-    print(f"top={top} center={center} bottom={bottom}")
+    # print(f"top={top} center={center} bottom={bottom}")
 
-    # x = np.array([top_center[0],top_center[0],center[0],bottom_center[0],bottom_center[0]])
-    # y = np.array([top,top_center[1],center[1],bottom_center[1],bottom])
-    w = top_right[0]-top_left[0]
-    h = top_right[1]-bottom_right[1]
-    # x = np.array([bottom_center[0]/100*w,bottom_center[0]/100*w,center[0]/100*w,top_center[0]/100*w,top_center[0]/100*w])
-    x = np.array([bottom,bottom_center[0],center[0],top_center[0],top])
-    # x = np.array([1,1,1,1,1])
-    # y = np.array([bottom/100*h,bottom_center[1]/100*h,center[1]/100*h,top_center[1]/100*h,top/100*h])
-    # y = np.array([0,1,0.5,3.5,4.5])
-    y = np.array([0,1/4.5,0.5,3.5/4.5,1])
-    print(w,h,x,y)
+
+    vals = np.array([[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0]])
+    x1,y1=np.split(vals,2,axis=1)
+    poly_x = x1.flatten()
+    poly_y = y1.flatten()
 
     # calculate polynomial
-    z = np.polyfit(x, y, 5)
-    f = np.poly1d(z)
+    poly_z = np.polyfit(poly_x, poly_y, len(poly_x))
+    poly_f = np.poly1d(poly_z)
 
     print("Loading model")
     model = YOLO('./networks/best_m.pt')  # load an official detection model
@@ -150,10 +142,10 @@ def runDetection():
                 if left_intersection and bottom_intersection and right_intersection and top_intersection:
                     x_percent = int(((position_x - left_intersection[0]) / (right_intersection[0] - left_intersection[0])) * 100)/100
                     y_percent = int(((position_y - bottom_intersection[1]) / (top_intersection[1] - bottom_intersection[1])) * 100)/100
-                    y_percent1 = f(int(position_y))
+                    y_percent1 = poly_f(int(position_y))
 
                     if result.names[int(c)]=="ball":
-                        print(f"x_percent={x_percent} y_percent={y_percent} y_percent1={y_percent1}")
+                        print(f"x_percent={x_percent} y_percent={y_percent} | {y_percent1} = poly_f({int(position_y)}) | poly_x={poly_x}")
                         # print(x_percent)
                         # print(y_percent)
                         balls.append({"x":x_percent,"y":y_percent})
