@@ -120,7 +120,11 @@ async def show_time(websocket):
                     clientz = ds.getTeamServerClients()
                     for clt in clientz:
                         # print(clientz[clt])
-                        await clientz[clt]["websocket"].send(jsonpickle.encode({"type":"data","message":message},unpicklable=False))
+                        ws = clientz[clt]["websocket"]
+                        if ws!=None and ws.close_rcvd==None:
+                            await ws.send(jsonpickle.encode({"type":"data","message":message},unpicklable=False))
+                        else:
+                            del clientz[clt]
 
 
 
