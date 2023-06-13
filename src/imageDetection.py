@@ -162,7 +162,7 @@ def runDetection():
                 if left_intersection and bottom_intersection and right_intersection and top_intersection:
                     x_percent = int(((position_x - left_intersection[0]) / (right_intersection[0] - left_intersection[0])) * 100)/100
                     y_percent = int(((position_y - bottom_intersection[1]) / (top_intersection[1] - bottom_intersection[1])) * 100)/100
-                    y_percent1 = poly_f(int(position_y))
+                    y_percent1 = float(poly_f(int(position_y)))
 
                     if result.names[int(c)]=="ball":
                         print(f"x_percent={x_percent} y_percent={y_percent} | {y_percent1} = poly_f({int(position_y)}) | poly_x={poly_x}")
