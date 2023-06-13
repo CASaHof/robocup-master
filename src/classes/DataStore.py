@@ -31,6 +31,14 @@ class DataStore(object):
             }
         return self.data["clients"][id]
         
+    def addTeamServer(self,id:str,websocket,user):
+        if not self.checkClient(id):
+            self.data["teamServer"][id] = {
+                "websocket":websocket,
+                "user":user
+            }
+        return self.data["teamServer"][id]
+        
     def removeClient(self,id:str):
         if self.checkClient(id):
             del self.data["clients"][id]
@@ -39,3 +47,9 @@ class DataStore(object):
         if self.checkClient(id):
             return self.data["clients"][id]["user"]
         return None
+    
+    def getTeamServerClients(self) -> CameraClient:
+        return self.data["teamServer"]
+        # if self.checkClient(id):
+            # return self.data["clients"][id]["user"]
+        # return None

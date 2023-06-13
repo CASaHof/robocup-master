@@ -4,14 +4,15 @@ def nPos(pos:float,target:float,offset:float=0.05):
 
 def normalizeCam(cam):
     for robot in cam:
+        # print(robot)
         robot.x = float(round(1-robot.x,3))
         robot.y = float(round(1-robot.y,3))
 
 def normalizePositions(cam1,cam2):
     # print(cam1,cam2)
     normalizeCam(cam2)
-    print("cam1",cam1)
-    print("cam2",cam2)
+    # print("cam1",cam1)
+    # print("cam2",cam2)
     robots = []
     for rob1 in cam1:
         for rob2 in cam2:

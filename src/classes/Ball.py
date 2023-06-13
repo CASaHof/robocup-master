@@ -6,3 +6,6 @@ from dataclasses_json import dataclass_json
 class Ball:
     x: int
     y: int
+    def copy(self):
+        r = Ball(self.x,self.y)
+        return r

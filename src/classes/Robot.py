@@ -8,3 +8,6 @@ class Robot:
     y: int
     id: str
     angle: int
+    def copy(self):
+        r = Robot(self.x,self.y,self.id,self.angle)
+        return r

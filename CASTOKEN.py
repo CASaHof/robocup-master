@@ -10,8 +10,14 @@ class CameraClient(Token):
     def __init__(self,UUID:str) -> None:
         super().__init__(UUID,"client")
 
+class TeamClient(Token):
+    def __init__(self,UUID:str) -> None:
+        super().__init__(UUID,"team")
+
 CASTOKEN = {
     "po1JTmRxNCQOCLn7MJAT": CameraClient("CameraClient-1"),
     "hm1qUiCgRG9L3pLmvEgW": CameraClient("CameraClient-2"),
-    "WOtEpKyRaD3cLKIcQG5J": CameraClient("CameraClient-3")
+    "WOtEpKyRaD3cLKIcQG5J": CameraClient("CameraClient-3"),
+    "gegsqIDA0HKwRygxPNpU": TeamClient("TeamClient-1"),
+    "tXXdFi3IDsRU3tjOTm9S": TeamClient("TeamClient-2"),
 }

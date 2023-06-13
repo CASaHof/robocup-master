@@ -47,7 +47,12 @@ async def show_time(websocket):
             if json["type"]=="auth" and "token" in json:
                 if json["token"] in CASTOKEN:
                     user = CASTOKEN[json["token"]]
-                    ds.addClient(websocket.id,websocket,user)
+                    if user.type == "client":
+                        ds.addClient(websocket.id,websocket,user)
+                    elif user.type=="team":
+                        ds.addTeamServer(websocket.id,websocket,user)
+                    else:
+                        pass
                     await websocket.send(jsonpickle.encode({"type":"authenticated","message":f"Welcome {user.UUID}"},unpicklable=False))
             user = ds.getClient(websocket.id)
             #if json["type"]=="data" and "data" in json and user:
@@ -58,6 +63,7 @@ async def show_time(websocket):
             newFrame = Frame()
             newFrame.robot = []
             newFrame.ball = []
+            # print(json["data"])
             if "time" in json["data"]:
                 newFrame.time = json["data"]["time"]
             if "balls" in json["data"]:
@@ -90,8 +96,31 @@ async def show_time(websocket):
                     # c1, c2 = framecouples.getCurrent()
                     # for robot in client1.robot:
                     # print(client1.robot,client2.robot)
-                    t = normalizePositions(client1.robot,client2.robot)
-                    print(t)
+                    normalizedRobots = normalizePositions(client1.robot,client2.robot)
+                    normalizedBalls = normalizePositions(client1.ball,client2.ball)
+                    # print(t)
+                    # TODO: SEND IT
+                    message = {
+                        "state": "playing",
+                        "time_remaining": 1337,
+                        "teams": [
+                            {
+                                "name": "Team 1",
+                                "score": 42
+                            },
+                            {
+                                "name": "Team 2",
+                                "score": 69
+                            }
+                        ],
+                        "robots": normalizedRobots,
+                        "balls": normalizedBalls,
+                        "timestamp": round(datetime.now().timestamp())
+                    }
+                    clientz = ds.getTeamServerClients()
+                    for clt in clientz:
+                        # print(clientz[clt])
+                        await clientz[clt]["websocket"].send(jsonpickle.encode({"type":"data","message":message},unpicklable=False))
 
 
 
