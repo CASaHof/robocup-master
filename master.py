@@ -51,6 +51,8 @@ async def show_time(websocket):
                         ds.addClient(websocket.id,websocket,user)
                     elif user.type=="team":
                         ds.addTeamServer(websocket.id,websocket,user)
+                    elif user.type=="web":
+                        ds.addWebClient(websocket.id,websocket,user)
                     else:
                         pass
                     await websocket.send(jsonpickle.encode({"type":"authenticated","message":f"Welcome {user.UUID}"},unpicklable=False))
@@ -118,6 +120,14 @@ async def show_time(websocket):
                         "timestamp": round(datetime.now().timestamp())
                     }
                     clientz = ds.getTeamServerClients()
+                    for clt in clientz:
+                        # print(clientz[clt])
+                        ws = clientz[clt]["websocket"]
+                        if ws!=None and ws.close_rcvd==None:
+                            await ws.send(jsonpickle.encode({"type":"data","message":message},unpicklable=False))
+                        else:
+                            del clientz[clt]
+                    clientz = ds.getWebClients()
                     for clt in clientz:
                         # print(clientz[clt])
                         ws = clientz[clt]["websocket"]

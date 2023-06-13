@@ -7,7 +7,7 @@ var ws = new WebSocket("ws://localhost:8765");
 var local_robots = [];
 
 ws.onopen = function () {
-  ws.send("welcome");
+  ws.send(JSON.stringify({ type: "auth", token: "61OfXnt2prlDjM2xUb3S" }));
   console.log("Message is sent...");
 };
 

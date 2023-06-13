@@ -7,6 +7,7 @@ class DataStore(object):
     data = {
         "clients": {},
         "teamServer": {},
+        "webClient": {},
     }
 
     def __new__(cls, *args, **kwargs):
@@ -23,6 +24,14 @@ class DataStore(object):
     def checkClient(self,id:str):
         return id in self.data["clients"]
 
+    def addWebClient(self,id:str,websocket,user):
+        if not self.checkClient(id):
+            self.data["webClient"][id] = {
+                "websocket":websocket,
+                "user":user
+            }
+        return self.data["webClient"][id]
+        
     def addClient(self,id:str,websocket,user):
         if not self.checkClient(id):
             self.data["clients"][id] = {
@@ -50,6 +59,6 @@ class DataStore(object):
     
     def getTeamServerClients(self) -> CameraClient:
         return self.data["teamServer"]
-        # if self.checkClient(id):
-            # return self.data["clients"][id]["user"]
-        # return None
+
+    def getWebClients(self) -> CameraClient:
+        return self.data["webClient"]
