@@ -4,8 +4,11 @@ from ultralytics import YOLO
 from PIL import Image, ImageDraw
 import numpy as np
 import cv2 as cv
+import sys
 from ultralytics import YOLO
 from src import Singleton,CASENV
+import matplotlib.pyplot as plt
+import matplotlib
 
 CAM_ID = CASENV.CAM_ID
 
@@ -64,14 +67,31 @@ def runDetection():
     # print(f"top={top} center={center} bottom={bottom}")
 
 
-    vals = np.array([[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0]])
+    # vals = np.array([[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0]])
+    vals = np.array([[height,2],[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0],[0,-1]])
+    # vals = np.array([[bottom,0],[bottom_center[1],1/4.5],[center[1],0.5],[top_center[1],3.5/4.5],[top,1]])
+    # print(vals)
     x1,y1=np.split(vals,2,axis=1)
     poly_x = x1.flatten()
     poly_y = y1.flatten()
 
     # calculate polynomial
-    poly_z = np.polyfit(poly_x, poly_y, len(poly_x))
+    poly_z = np.polyfit(poly_x, poly_y, 4)
     poly_f = np.poly1d(poly_z)
+
+    # matplotlib.use('TkAgg')
+    # d = []
+    # for i in range(int(top),int(bottom)):
+    #     d.append(poly_f(i))
+    # # d.append(vals)
+    # e = []
+    # # for i in range(poly_y):
+    #     # e.append(i)
+    # plt.plot(range(int(top),int(bottom)),d)
+    # plt.plot(poly_x,poly_y)
+    # plt.ylabel('some numbers')
+    # plt.show()
+    # sys.exit()
 
     print("Loading model")
     model = YOLO('./networks/best_m.pt')  # load an official detection model
@@ -148,30 +168,30 @@ def runDetection():
                         print(f"x_percent={x_percent} y_percent={y_percent} | {y_percent1} = poly_f({int(position_y)}) | poly_x={poly_x}")
                         # print(x_percent)
                         # print(y_percent)
-                        balls.append({"x":x_percent,"y":y_percent})
+                        balls.append({"x":x_percent,"y":y_percent1})
 
                     if result.names[int(c)]=="robot":
                         robots.append({
                             "x": x_percent,
-                            "y": y_percent,
+                            "y": y_percent1,
                             "id": "blue",
                             "team": "blue",
                             "angle": 0,
                         })
 
                     outline = "red"
-                    inArea = x_percent>0 and x_percent<1 and y_percent>0 and y_percent<1
+                    inArea = x_percent>0 and x_percent<1 and y_percent1>0 and y_percent1<1
                     if inArea:
                         outline = "#4ae53a"
 
                     # img1.rectangle(shape, outline = outline, width=2)
                     # print(inArea)
-                    if inArea:
-                        img1.text((position_x-1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
-                        img1.text((position_x-1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
-                        img1.text((position_x+1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
-                        img1.text((position_x+1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
-                        img1.text((position_x,boxes.xyxy[idx][1]-20), fill ="#ffffff", outline="#000", text=f"x = {x_percent} | y = {y_percent} | label = {result.names[int(c)]}")
+                    # if inArea:
+                    img1.text((position_x-1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent1} | label = {result.names[int(c)]}")
+                    img1.text((position_x-1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent1} | label = {result.names[int(c)]}")
+                    img1.text((position_x+1,boxes.xyxy[idx][1]-20-1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent1} | label = {result.names[int(c)]}")
+                    img1.text((position_x+1,boxes.xyxy[idx][1]-20+1), fill ="#000000", outline="#000", text=f"x = {x_percent} | y = {y_percent1} | label = {result.names[int(c)]}")
+                    img1.text((position_x,boxes.xyxy[idx][1]-20), fill ="#ffffff", outline="#000", text=f"x = {x_percent} | y = {y_percent1} | label = {result.names[int(c)]}")
                 # else:
                     # print(result.names[int(c)])
         s1.setBalls(balls)
