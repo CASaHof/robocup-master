@@ -68,7 +68,8 @@ def runDetection():
 
 
     # vals = np.array([[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0]])
-    vals = np.array([[height,2],[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0],[0,-1]])
+    # vals = np.array([[height,2],[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0],[0,-1]])
+    vals = np.array([[0,2],[top,1],[top_center[1],3.5/4.5],[center[1],0.5],[bottom_center[1],1/4.5],[bottom,0],[height,-1]])
     # vals = np.array([[bottom,0],[bottom_center[1],1/4.5],[center[1],0.5],[top_center[1],3.5/4.5],[top,1]])
     # print(vals)
     x1,y1=np.split(vals,2,axis=1)
@@ -162,10 +163,10 @@ def runDetection():
                 if left_intersection and bottom_intersection and right_intersection and top_intersection:
                     x_percent = int(((position_x - left_intersection[0]) / (right_intersection[0] - left_intersection[0])) * 100)/100
                     y_percent = int(((position_y - bottom_intersection[1]) / (top_intersection[1] - bottom_intersection[1])) * 100)/100
-                    y_percent1 = float(poly_f(int(position_y)))
+                    y_percent1 = round(float(poly_f(int(position_y))),2)
 
                     if result.names[int(c)]=="ball":
-                        print(f"x_percent={x_percent} y_percent={y_percent} | {y_percent1} = poly_f({int(position_y)}) | poly_x={poly_x}")
+                        # print(f"x_percent={x_percent} y_percent={y_percent} | {y_percent1} = poly_f({int(position_y)}) | poly_x={poly_x}")
                         # print(x_percent)
                         # print(y_percent)
                         balls.append({"x":x_percent,"y":y_percent1})

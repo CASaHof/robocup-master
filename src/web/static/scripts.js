@@ -3,7 +3,7 @@
 // TODO: Implement goals? Display score / Display GOAL EFFECT WITH NUCLEAR BOMB EXPLOSION
 // TBC: GOAL DETECTION MANUALLY?AUTOMATICALLY?
 
-var ws = new WebSocket("ws://localhost:8765");
+var ws = new WebSocket("ws://192.168.171.136:8765");
 var local_robots = [];
 
 ws.onopen = function () {
@@ -16,6 +16,12 @@ ws.onmessage = function (evt) {
   // if(wasUpdated) return
   wasUpdated = true;
   var received_msg = JSON.parse(evt.data);
+  console.log(received_msg);
+
+  if (received_msg.type === "data") {
+    received_msg = received_msg.message;
+  }
+  console.log(received_msg);
   if ("time_remaining" in received_msg) {
     document.getElementById("time").innerHTML = new Date(
       received_msg.time_remaining

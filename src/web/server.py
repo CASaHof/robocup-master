@@ -72,3 +72,4 @@ def runWebserver(server_class=HTTPServer, handler_class=Server):
     httpd = server_class(server_address, handler_class)
 
     httpd.serve_forever()
+    print("Webserver gone")
