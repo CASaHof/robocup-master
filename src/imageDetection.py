@@ -69,8 +69,8 @@ def runDetection():
 
     # vals = np.array([[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0]])
     # vals = np.array([[height,2],[bottom,1],[bottom_center[1],3.5/4.5],[center[1],0.5],[top_center[1],1/4.5],[top,0],[0,-1]])
-    vals = np.array([[0,2],[top,1],[top_center[1],3.5/4.5],[center[1],0.5],[bottom_center[1],1/4.5],[bottom,0],[height,-1]])
-    # vals = np.array([[bottom,0],[bottom_center[1],1/4.5],[center[1],0.5],[top_center[1],3.5/4.5],[top,1]])
+    # vals = np.array([[0,2],[top,1],[top_center[1],3.5/4.5],[center[1],0.5],[bottom_center[1],1/4.5],[bottom,0],[height,-1]])
+    vals = np.array([[top,1],[top_center[1],3.5/4.5],[center[1],0.5],[bottom_center[1],1/4.5],[bottom,0]])
     # print(vals)
     x1,y1=np.split(vals,2,axis=1)
     poly_x = x1.flatten()
