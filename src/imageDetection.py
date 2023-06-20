@@ -77,7 +77,7 @@ def runDetection():
     poly_y = y1.flatten()
 
     # calculate polynomial
-    poly_z = np.polyfit(poly_x, poly_y, 4)
+    poly_z = np.polyfit(poly_x, poly_y, 3)
     poly_f = np.poly1d(poly_z)
 
     # matplotlib.use('TkAgg')
