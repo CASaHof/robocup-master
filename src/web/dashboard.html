@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,13 +8,20 @@
     <title>Cooperative Autonomous Systems</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <div id="header">
-        <div class="team team1 headerItem">TEAM 1</div>
-        <div class="score team1 headerItem">1</div>
-        <div class="headerItem" id="time"></div>
-        <div class="score team2 headerItem">2</div>
-        <div class="team team2 headerItem">TEAM 2</div>
+        <div class="score team1 headerItem">
+            <span class="prev"></span>
+            <span class="text">0</span>
+            <span class="next"></span>
+        </div>
+        <div class="score headerItem reset">vs</div>
+        <div class="score team2 headerItem">
+            <span class="prev"></span>
+            <span class="text">0</span>
+            <span class="next"></span>
+        </div>
     </div>
     <div id="root">
         <div class="goal goal1"></div>
@@ -25,5 +33,5 @@
     </div>
     <script src="static/scripts.js" defer></script>
 </body>
-</html>
 
+</html>

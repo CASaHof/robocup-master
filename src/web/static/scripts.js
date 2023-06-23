@@ -32,8 +32,8 @@ ws.onmessage = function (evt) {
     var ball = document.createElement("div");
     ball.classList.add("ball");
     document.getElementsByClassName("field")[0].append(ball);
-    ball.style.left = received_msg.balls[i].x * 100 + "%";
-    ball.style.top = 100 - received_msg.balls[i].y * 100 + "%";
+    ball.style.left = (1 - received_msg.balls[i].y) * 100 + "%";
+    ball.style.top = 100 - (1 - received_msg.balls[i].x) * 100 + "%";
   }
   console.log("Message is received...", received_msg);
 
@@ -42,8 +42,9 @@ ws.onmessage = function (evt) {
     local_robots[i].classList.add("robot");
     // robot.style.background = received_msg.robots[i].id;
     document.getElementsByClassName("field")[0].append(local_robots[i]);
-    local_robots[i].style.left = received_msg.robots[i].x * 100 + "%";
-    local_robots[i].style.top = 100 - received_msg.robots[i].y * 100 + "%";
+    local_robots[i].style.left = (1 - received_msg.robots[i].y) * 100 + "%";
+    local_robots[i].style.top =
+      100 - (1 - received_msg.robots[i].x) * 100 + "%";
     local_robots[
       i
     ].style.transform = `rotate(${received_msg.robots[i].angle}deg)`;
@@ -72,3 +73,32 @@ function removeDynObjects() {
 
   document.getElementById("message").style.display = "none";
 }
+document.querySelector(".team1 .prev").addEventListener("click", function (e) {
+  e.preventDefault();
+  const n = parseInt(document.querySelector(".team1 .text").innerHTML, 10);
+  if (n == 0) return;
+  document.querySelector(".team1 .text").innerHTML = n - 1;
+});
+document.querySelector(".team1 .next").addEventListener("click", function (e) {
+  e.preventDefault();
+  document.querySelector(".team1 .text").innerHTML =
+    parseInt(document.querySelector(".team1 .text").innerHTML, 10) + 1;
+});
+
+document.querySelector(".team2 .prev").addEventListener("click", function (e) {
+  e.preventDefault();
+  const n = parseInt(document.querySelector(".team2 .text").innerHTML, 10);
+  if (n == 0) return;
+  document.querySelector(".team2 .text").innerHTML = n - 1;
+});
+document.querySelector(".team2 .next").addEventListener("click", function (e) {
+  e.preventDefault();
+  document.querySelector(".team2 .text").innerHTML =
+    parseInt(document.querySelector(".team2 .text").innerHTML, 10) + 1;
+});
+
+document.querySelector(".reset").addEventListener("click", function (e) {
+  e.preventDefault();
+  document.querySelector(".team1 .text").innerHTML = 0;
+  document.querySelector(".team2 .text").innerHTML = 0;
+});

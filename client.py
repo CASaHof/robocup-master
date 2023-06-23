@@ -16,7 +16,7 @@ async def establishConnection():
     WS_PORT = CASENV.WS_PORT
     WS_AUTH = CASENV.WS_AUTH
     
-    WS_HOST = "localhost"
+    WS_HOST = "192.168.171.136"
     if(len(sys.argv)>1):
         WS_HOST = sys.argv[1]
 

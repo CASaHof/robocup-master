@@ -1,35 +1,47 @@
 #root {
-    width: calc(100vw - 40px);
-    height: calc(100vh - 100px - 40px);
-    background-color: #FFF;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: green;
-    background-image: url("/res/backgroundgrass.jpg");
-    background-size: 200px;
+  width: calc(100% - 100px);
+  height: 100vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: green;
+  background-image: url("/res/backgroundgrass.jpg");
+  background-size: 200px;
+  margin-left: 100px;
 }
 
-body, html {
-    padding: 0;
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: green;
-    background-image: url("/res/backgroundgrass.jpg");
-    background-size: 200px;
+body,
+html {
+  padding: 0;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100vh;
+}
+body {
+  width: 50%;
+  background-image: url("/res/backgroundgrass.jpg");
+  background-color: green;
+  background-size: 200px;
+}
+html {
+  background-color: #000;
 }
 
 #header {
-  height: 80px;
-  line-height: 80px;
-  /* REST 980 */
+  width: 80px;
   text-align: center;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding-top: 20px;
+  position: absolute;
+  height: 100vh;
+  padding: 0;
+  width: 170px;
+  text-align: right;
 }
 .headerItem {
   font-size: 50px;
@@ -50,7 +62,8 @@ body, html {
   border-color: #fff;
   border-style: solid;
   border-width: 4px;
-  width: calc(calc(calc(100vh - 320px) / 9 * 16));
+  width: calc(calc(calc(100vh - 320px) / 12 * 9));
+  /* height: calc(100vh - 300px); */
   height: calc(100vh - 300px);
   position: relative;
 }
@@ -59,9 +72,9 @@ body, html {
   content: "";
   position: absolute;
   background-color: #fff;
-  height: 100%;
-  width: 3px;
-  left: calc(50% + 1px);
+  height: 3px;
+  width: 100%;
+  top: calc(50% + 1px);
 }
 #message {
   border-color: #fff;
@@ -98,20 +111,21 @@ body, html {
 }
 
 .goal {
-  display: none;
+  display: block;
   border-color: #fff;
   border-style: solid;
   border-width: 3px;
-  width: 100px;
-  height: calc((100vh - 300px) / 2);
+  width: calc((100vh - 500px) / 2);
+  height: 70px;
+  /* margin-left: 50px; */
 }
 
 .goal1 {
-  border-right: none;
+  border-bottom: none;
 }
 
 .goal2 {
-  border-left: none;
+  border-top: none;
 }
 
 .ball {
@@ -139,4 +153,19 @@ body, html {
   background-position: center;
   background-color: #fff;
   z-index: 1;
+}
+.score {
+  position: relative;
+}
+.score > .prev {
+  left: 0;
+}
+.score > .next {
+  left: 50%;
+}
+.score > .prev,
+.score > .next {
+  position: absolute;
+  height: 100%;
+  width: 50%;
 }
