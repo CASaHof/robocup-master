@@ -7,6 +7,7 @@ import sys
 
 from src import DataStore, FrameCouples, Frame, Ball, Robot, Bucket,CASENV,runWebserver
 from CASTOKEN import CASTOKEN
+from src.classes.singletonDataClass import Singleton
 from src.lib.normalizePositions import normalizePositions
 
 framecouples = FrameCouples(10)
@@ -30,6 +31,7 @@ bucket = Bucket(framecouples)
 
 
 ds = DataStore()
+s1 = Singleton()
 
 async def show_time(websocket):
     global bucket
@@ -60,7 +62,25 @@ async def show_time(websocket):
                 user = ds.getClient(websocket.id)
                 #if json["type"]=="data" and "data" in json and user:
                 #    print(f"Message from {user['UUID']}: {json}")
-            #print(json)
+            if json["type"]=="score":
+                
+                if json["team"]=="up":
+                    if json["update"]=="+":
+                        s1.data["teams"][0]["score"] += 1
+                    if json["update"]=="-":
+                        s1.data["teams"][0]["score"] -= 1
+                if json["team"]=="down":
+                    if json["update"]=="+":
+                        s1.data["teams"][1]["score"] += 1
+                    if json["update"]=="-":
+                        s1.data["teams"][1]["score"] -= 1
+                
+                # s1.data
+                # { "type": "score", "team": "up", "update": "-" }
+                # { "type": "score", "team": "up", "update": "+" }
+                # { "type": "score", "team": "down", "update": "-" }
+                # { "type": "score", "team": "down", "update": "+" }
+
             if "data" in json:
                 user = ds.getClient(websocket.id)
                 newFrame = Frame()
@@ -106,16 +126,7 @@ async def show_time(websocket):
                         message = {
                             "state": "playing",
                             "time_remaining": 1337,
-                            "teams": [
-                                {
-                                    "name": "Team 1",
-                                    "score": 42
-                                },
-                                {
-                                    "name": "Team 2",
-                                    "score": 69
-                                }
-                            ],
+                            "teams": s1.data["teams"],
                             "robots": normalizedRobots,
                             "balls": normalizedBalls,
                             "timestamp": round(datetime.now().timestamp())

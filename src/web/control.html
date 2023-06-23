@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            width: 100vw;
+            height: calc(100vh / 4 * 3);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body>div {
+            height: calc(100vh / 4);
+            line-height: calc(100vh / 4);
+            text-align: center;
+            display: flex;
+            font-size: 100px;
+        }
+
+        body>div>* {
+            width: calc(100vw/3);
+            font-size: 100px;
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 0;
+        }
+
+        body>div:nth-of-type(2) {
+            width: 100vw;
+            display: block;
+        }
+
+        body>div>*:nth-of-type(1) {}
+
+        body>div>*:nth-of-type(2) {}
+
+        body>div>*:nth-of-type(3) {}
+    </style>
+</head>
+
+<body>
+    <div>
+        <button id="up_prev">-</button>
+        <span id="up_text">0</span>
+        <button id="up_next">+</button>
+    </div>
+    <div>vs</div>
+    <div></div>
+    <div>
+        <button id="down_prev">-</button>
+        <span id="down_text">0</span>
+        <button id="down_next">+</button>
+    </div>
+</body>
+<script>
+
+    var ws = new WebSocket("ws://192.168.171.136:8765");
+    var local_robots = [];
+
+    ws.onopen = function () {
+        ws.send(JSON.stringify({ type: "auth", token: "cSOowZCiQycVtn683NqI" }));
+        console.log("Message is sent...");
+    };
+
+    ws.onmessage = function (evt) {
+        var received_msg = JSON.parse(evt.data);
+        console.log(received_msg)
+        if (received_msg.type == "data") {
+            document.getElementById("up_text").innerHTML = received_msg.message.teams[0].score
+            document.getElementById("down_text").innerHTML = received_msg.message.teams[1].score
+        }
+
+
+    };
+    document.getElementById("up_prev").addEventListener("click", function (e) {
+        e.preventDefault()
+        ws.send(JSON.stringify({ "type": "score", "team": "up", "update": "-" }))
+    })
+    document.getElementById("up_next").addEventListener("click", function (e) {
+        e.preventDefault()
+        ws.send(JSON.stringify({ "type": "score", "team": "up", "update": "+" }))
+    })
+    document.getElementById("down_prev").addEventListener("click", function (e) {
+        e.preventDefault()
+        ws.send(JSON.stringify({ "type": "score", "team": "down", "update": "-" }))
+    })
+    document.getElementById("down_next").addEventListener("click", function (e) {
+        e.preventDefault()
+        ws.send(JSON.stringify({ "type": "score", "team": "down", "update": "+" }))
+    })
+
+</script>
+
+</html>

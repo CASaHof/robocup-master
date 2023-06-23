@@ -20,20 +20,26 @@ ws.onmessage = function (evt) {
 
   if (received_msg.type === "data") {
     received_msg = received_msg.message;
+  } else {
+    return;
   }
   console.log(received_msg);
-  if ("time_remaining" in received_msg) {
-    document.getElementById("time").innerHTML = new Date(
-      received_msg.time_remaining
-    ).toLocaleTimeString();
-  }
+  // if ("time_remaining" in received_msg) {
+  //   document.getElementById("time").innerHTML = new Date(
+  //     received_msg.time_remaining
+  //   ).toLocaleTimeString();
+  // }
   removeDynObjects();
+  document.querySelector(".team1 .text").innerHTML =
+    received_msg["teams"][0]["score"];
+  document.querySelector(".team2 .text").innerHTML =
+    received_msg["teams"][1]["score"];
   for (let i = 0; i < received_msg.balls.length; i++) {
     var ball = document.createElement("div");
     ball.classList.add("ball");
     document.getElementsByClassName("field")[0].append(ball);
-    ball.style.left = (1 - received_msg.balls[i].y) * 100 + "%";
-    ball.style.top = 100 - (1 - received_msg.balls[i].x) * 100 + "%";
+    ball.style.left = (1 - received_msg.balls[i].x) * 100 + "%";
+    ball.style.top = 100 - (1 - received_msg.balls[i].y) * 100 + "%";
   }
   console.log("Message is received...", received_msg);
 
@@ -42,15 +48,15 @@ ws.onmessage = function (evt) {
     local_robots[i].classList.add("robot");
     // robot.style.background = received_msg.robots[i].id;
     document.getElementsByClassName("field")[0].append(local_robots[i]);
-    local_robots[i].style.left = (1 - received_msg.robots[i].y) * 100 + "%";
+    local_robots[i].style.left = (1 - received_msg.robots[i].x) * -100 + "%";
     local_robots[i].style.top =
-      100 - (1 - received_msg.robots[i].x) * 100 + "%";
+      100 - (1 - received_msg.robots[i].y) * 100 + "%";
     local_robots[
       i
     ].style.transform = `rotate(${received_msg.robots[i].angle}deg)`;
   }
 
-  document.getElementsByClassName;
+  // document.getElementsByClassName;
   // if(Math.random() < 0.9){
   //     document.getElementById("message").style.display = "unset"
   // }
@@ -71,7 +77,7 @@ function removeDynObjects() {
     local_robots[i].remove();
   }
 
-  document.getElementById("message").style.display = "none";
+  // document.getElementById("message").style.display = "none";
 }
 document.querySelector(".team1 .prev").addEventListener("click", function (e) {
   e.preventDefault();

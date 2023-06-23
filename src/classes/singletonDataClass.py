@@ -17,6 +17,16 @@ class Singleton(object):
     data = {
         "time": "time",
         "state": "debug",
+        "teams": [
+            {
+                "name": "Up",
+                "score": 0
+            },
+            {
+                "name": "Down",
+                "score": 0
+            }
+        ],
         "robots": [],
         "balls": []
     }

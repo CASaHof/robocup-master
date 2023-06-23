@@ -25,4 +25,5 @@ CASTOKEN = {
     "gegsqIDA0HKwRygxPNpU": TeamClient("TeamClient-1"),
     "tXXdFi3IDsRU3tjOTm9S": TeamClient("TeamClient-2"),
     "61OfXnt2prlDjM2xUb3S": WebClient("WebClient"),
+    "cSOowZCiQycVtn683NqI": WebClient("WebClient-2"),
 }

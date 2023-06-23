@@ -20,6 +20,9 @@ class Server(BaseHTTPRequestHandler):
 
         if bool(re.compile("dashboard.html").search(path)):
             return self.wfile.write(serveFile('./src/web'+path))
+        
+        if bool(re.compile("control.html").search(path)):
+            return self.wfile.write(serveFile('./src/web'+path))
 
         """
         Note: ([a-zA-Z0-9]*) matches all single word strings.
